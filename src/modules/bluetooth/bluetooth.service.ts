@@ -26,12 +26,14 @@ const useBluetooth$ = (_ctx?: Context) => {
                 },
               ],
             }
-          : undefined
+          : {
+              acceptAllDevices: true
+            }
       )
       .then((bleDevice) => {
         device.value = bleDevice;
         execHooks(onPairHooks.value);
-        
+
         bleDevice.ongattserverdisconnected = () => {
           forget();
         };
