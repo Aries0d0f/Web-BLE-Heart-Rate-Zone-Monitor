@@ -83,28 +83,20 @@ const setupTimerHooksHandler = (hooks: TimerHooks) => {
     will-change: font-size;
     transition: font-size 0.5s ease-in-out;
 
-    @media screen and (max-width: 1680px) {
+    @media screen and (max-width: 1680px) and (min-height: 1050px) {
+      font-size: 32px;
+    }
+
+    @media screen and (max-width: 768px) and (min-height: 1024px) {
+      font-size: 30px;
+    }
+
+    @media screen and (height < 1024px) {
+      font-size: 28px;
+    }
+
+    @media screen and (width < 320px) {
       font-size: 24px;
-    }
-
-    @media screen and (max-width: 1400px) {
-      font-size: 20px;
-    }
-
-    @media screen and (max-width: 1024px) {
-      font-size: 18px;
-    }
-
-    @media screen and (max-width: 768px) {
-      font-size: 16px;
-    }
-
-    @media screen and (max-width: 375px) {
-      font-size: 14px;
-    }
-
-    @media screen and (max-width: 340px) {
-      font-size: 12px;
     }
   }
 
