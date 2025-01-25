@@ -31,6 +31,13 @@ const useBluetooth$ = (_ctx?: Context) => {
       .then((bleDevice) => {
         device.value = bleDevice;
         execHooks(onPairHooks.value);
+        
+        bleDevice.ongattserverdisconnected = () => {
+          forget();
+        };
+        bleDevice.onserviceremoved = () => {
+          forget();
+        };
       });
 
   const forget = () => {
@@ -68,6 +75,8 @@ const useBluetooth$ = (_ctx?: Context) => {
     (value) => {
       if (value) {
         execHooks(onPairHooks.value);
+      } else {
+        execHooks(onForgetHooks.value);
       }
     },
     { immediate: true }
