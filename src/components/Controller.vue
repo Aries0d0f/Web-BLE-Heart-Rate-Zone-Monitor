@@ -1,8 +1,20 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
+import { useStorage } from "@vueuse/core";
 
 import { Features } from "@/modules/bluetooth/bluetooth.model";
 import { useBluetooth } from "@/modules/bluetooth/bluetooth.service";
+
+import { toggleSignal } from "@/shared/signal";
+import { defaultPreferences } from "@/model/preference.model";
+
+import type { Signal } from "@/shared/signal";
+import type { Preference } from "@/model/preference.model";
+
+const preferences = useStorage<Preference>("preferences", defaultPreferences);
+const props = defineProps<{
+  onShowPreference: Signal<boolean>;
+}>();
 
 const $bluetooth = useBluetooth();
 
@@ -20,7 +32,9 @@ const features = [Features.HEART_RATE.Service];
   >
     <button
       :class="[$style.wrapper, $style.flex, $style.horizontal]"
-      @click="() => $bluetooth.pair(features)"
+      @click="
+        () => $bluetooth.pair(preferences.showAllDevices ? undefined : features)
+      "
     >
       <Icon :class="$style.icon" icon="fa6-brands:bluetooth" />
       <span>Connect</span>
@@ -32,7 +46,10 @@ const features = [Features.HEART_RATE.Service];
       <Icon :class="$style.icon" icon="fa6-solid:link-slash" />
       <span>Disconnect</span>
     </button>
-    <button :class="[$style.wrapper, $style.flex, $style.horizontal]" @click="">
+    <button
+      :class="[$style.wrapper, $style.flex, $style.horizontal]"
+      @click="toggleSignal(props.onShowPreference)"
+    >
       <Icon :class="$style.icon" icon="fa6-solid:gear" />
       <span>Preference</span>
     </button>
