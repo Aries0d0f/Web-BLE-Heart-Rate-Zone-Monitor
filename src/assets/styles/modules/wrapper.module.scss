@@ -1,0 +1,81 @@
+@mixin use($type, $wrap: false, $direction: null, $template: null) {
+  position: relative;
+
+  @if $type == flex {
+    @include flex($wrap, $direction);
+  } @else if $type == grid {
+    @include grid($template);
+  }
+}
+
+@mixin flex($wrap: false, $direction) {
+  display: flex;
+
+  @if $wrap {
+    flex-wrap: wrap;
+  } @else {
+    flex-wrap: nowrap;
+  }
+
+  @if $direction == horizontal {
+    flex-direction: row;
+  } @else if $direction == vertical {
+    flex-direction: column;
+  }
+}
+
+@mixin flex-item($index: null, $name: null, $grow: 1, $shrink: 1, $basis: 0) {
+  @if $name {
+    .#{$name},
+    &.#{$name} {
+      flex: $grow $shrink $basis;
+    }
+  } @else {
+    &:nth-child(#{$index}) {
+      flex: $grow $shrink $basis;
+    }
+  }
+}
+
+@mixin grid($template) {
+  display: grid;
+  grid-template: $template;
+}
+
+.wrapper {
+  width: var(--wrapper-width, auto);
+  height: var(--wrapper-height, auto);
+  max-width: var(--wrapper-max-width, none);
+  max-height: var(--wrapper-max-height, none);
+  min-width: var(--wrapper-min-width, none);
+  min-height: var(--wrapper-min-height, none);
+  margin: var(--wrapper-margin);
+  padding: var(--wrapper-padding);
+  gap: var(--wrapper-gap);
+
+  &.flex {
+    @for $i from 1 through 12 {
+      @include flex-item($name: 'col-' + $i, $grow: $i);
+    }
+
+    &.horizontal {
+      @include use($type: flex, $wrap: false, $direction: horizontal);
+
+      &.wrap {
+        @include use($type: flex, $wrap: true, $direction: horizontal);
+      }
+    }
+
+    &.vertical {
+      @include use($type: flex, $wrap: false, $direction: vertical);
+
+      &.wrap {
+        @include use($type: flex, $wrap: true, $direction: vertical);
+      }
+    }
+  }
+
+  &.grid {
+    @include use($type: grid, $template: var(--grid-template));
+  }
+}

@@ -1,0 +1,17 @@
+@import "libs/normalize";
+@import "libs/typography";
+@import "libs/color";
+@include normalize;
+@include typography;
+
+:root {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+#app {
+  position: relative;
+  height: 100vh;
+  overflow: clip;
+}

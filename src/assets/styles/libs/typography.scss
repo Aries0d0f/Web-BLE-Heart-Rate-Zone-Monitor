@@ -1,0 +1,50 @@
+@mixin typography {
+  * {
+    font-family: 'DIN 2014', DIN, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    text-rendering: geometricprecision;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+
+  .font {
+    &-uppercase {
+      text-transform: uppercase;
+    }
+
+    &-capitalize {
+      text-transform: capitalize;
+    }
+
+    &-wrap {
+      white-space: pre;
+
+      &.force-break {
+        white-space: pre-wrap;
+
+        @supports (white-space: break-spaces) {
+          white-space: break-spaces;
+        }
+      }
+    }
+
+    &-align {
+      &--left {
+        text-align: left;
+      }
+
+      &--center {
+        text-align: center;
+      }
+
+      &--right {
+        text-align: right;
+      }
+    }
+
+    &-warp {
+      white-space: pre-wrap;
+    }
+  }
+}
