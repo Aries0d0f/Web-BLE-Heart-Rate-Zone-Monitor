@@ -16,7 +16,7 @@ export const useTimer = () => {
       timestamp.value += 1;
     },
     1000,
-    { immediate: false, immediateCallback: true }
+    { immediate: false, immediateCallback: false }
   );
 
   const clock = computed(() => {
