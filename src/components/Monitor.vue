@@ -27,9 +27,8 @@ onPair((device) => {
           characteristic.addEventListener(
             "characteristicvaluechanged",
             () => {
-              const serviceValue = characteristic.value?.getInt16(0);
-              if (serviceValue) {
-                value.value = serviceValue;
+              if (characteristic.value) {
+                value.value = new Int8Array(characteristic.value.buffer)[1]
               }
             },
             true
@@ -86,7 +85,7 @@ onForget((device) => {
   background-color: var(--color-gray-900);
   place-content: center;
   place-items: center;
-  min-width: 10em;
+  width: var(--monitor-width);
 
   h1 {
     --wrapper-gap: 0.2em;
@@ -109,6 +108,8 @@ onForget((device) => {
 
   label {
     color: var(--color-gray-500);
+    font-size: 1em;
+    font-weight: bold;
   }
 }
 </style>
