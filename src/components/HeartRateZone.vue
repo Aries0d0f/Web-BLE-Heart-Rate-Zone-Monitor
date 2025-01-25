@@ -178,7 +178,7 @@ onMounted(() => {
             { [$style.active]: props.heartRate && zone.active && isGlobalTimerInitialized() },
           ]"
         >
-          <Icon icon="fa6-solid:heart" />
+          <Icon :class="$style.icon" icon="fa6-solid:heart" />
           <label>{{ zone.name }}</label>
         </div>
       </template>
@@ -225,22 +225,31 @@ h3 {
     --wrapper-gap: 0.2em;
   }
 
-  --wrapper-gap: 0.5em;
+  --wrapper-gap: 0.3em;
 
-  padding: 0.1em 0.5em;
-  line-height: 1;
+  padding: 0.1em 0.3em;
   height: 1.2em;
   min-width: 1.2em;
   width: fit-content;
   place-content: center;
   place-items: center;
 
+  > .icon,
+  > label {
+    font-size: 0.7em;
+    line-height: 1;
+    vertical-align: middle;
+  }
+
+  > label {
+    margin-right: 0.2em;
+  }
+
   @each $style, $color in $style-sets {
     &.#{$style} {
       background-color: $color;
       border-radius: 1em;
       font-weight: bold;
-      font-size: 0.8em;
     }
   }
 
