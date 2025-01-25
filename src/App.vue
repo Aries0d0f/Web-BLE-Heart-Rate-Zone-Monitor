@@ -8,16 +8,24 @@ import { useTimer } from "@/shared/timer";
 import Controller from "@/components/Controller.vue";
 import Monitor from "@/components/Monitor.vue";
 import Preference from "@/components/Preference.vue";
+import HeartRateZone from "@/components/HeartRateZone.vue";
+import { Features } from '@/modules/bluetooth/bluetooth.model';
 
 import type { Feature } from '@/modules/bluetooth/bluetooth.model';
+import type { TimerHooks } from '@/shared/timer';
 
 setupModules();
 
 const meters = ref<Map<Feature, number>>(new Map());
 
-const timer = useTimer();
+const timerHooks = ref<TimerHooks>();
+const timer = useTimer(timerHooks);
 
 const onShowPreference = signal(false);
+
+const setupTimerHooksHandler = (hooks: TimerHooks) => {
+  timerHooks.value = hooks;
+};
 </script>
 
 <template>
@@ -29,6 +37,7 @@ const onShowPreference = signal(false);
       $style.vertical,
     ]"
   >
+    <HeartRateZone :heart-rate="meters.get(Features.HEART_RATE.ID)" @setup-hooks="setupTimerHooksHandler" />
     <div
       :class="[
         $style['viewport-wrapper'],
