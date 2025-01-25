@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from "vue";
 import { Icon } from "@iconify/vue";
-import { useStorage } from "@vueuse/core";
+import { refDebounced, useStorage } from "@vueuse/core";
 import { TimerState, useTimer } from "@/shared/timer";
 
 import { HeartRateFormula } from "@/model/preference.model";
@@ -47,6 +47,7 @@ const preferences = useStorage<Preference>("preferences", defaultPreferences);
 const isGlobalTimerInitialized = signal(false);
 
 const HR = computed(() => props.heartRate || 0);
+const HRdebounced = refDebounced(HR, 1000);
 const HRmax = computed(
   () =>
     preferences.value.maxHeartRate ||
@@ -96,7 +97,7 @@ const zones = computed(() =>
     .map((zone) => ({
       ...zone,
       get active() {
-        return HR.value >= zone.min && HR.value < zone.max;
+        return HRdebounced.value >= zone.min && HRdebounced.value < zone.max;
       },
     }))
 );
@@ -121,10 +122,9 @@ const setupHooks = () => {
   });
 };
 
-watch(
-  zones,
-  (zones) => {
-    zones.forEach((zone) => {
+const setupUpdateSchedule = () => {
+  globalThis.requestAnimationFrame(() => {
+    zones.value.forEach((zone) => {
       if (isGlobalTimerInitialized()) {
         if (zone.active) {
           zone.timer[
@@ -135,15 +135,12 @@ watch(
         }
       }
     });
-  },
-  {
-    immediate: true,
-    deep: true,
-  }
-);
+  });
+}
 
 onMounted(() => {
   setupHooks();
+  setupUpdateSchedule();
 });
 </script>
 
