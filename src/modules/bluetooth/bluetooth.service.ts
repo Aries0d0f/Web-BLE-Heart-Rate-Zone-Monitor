@@ -1,4 +1,4 @@
-import { readonly, ref, watch } from "vue";
+import { nextTick, readonly, ref, watch } from "vue";
 
 import type { InjectionKey } from "vue";
 
@@ -46,7 +46,10 @@ const useBluetooth$ = (_ctx?: Context) => {
     if (device.value) {
       execHooks(onForgetHooks.value);
       device.value.forget();
-      device.value = null;
+
+      nextTick(() => {
+        device.value = null;
+      })
     }
   };
 
