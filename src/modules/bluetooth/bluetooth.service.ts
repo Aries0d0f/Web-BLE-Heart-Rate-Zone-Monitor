@@ -69,7 +69,7 @@ const useBluetooth$ = (_ctx?: Context) => {
     onForgetHooks.value.push(cb);
   };
 
-  navigator.bluetooth?.getDevices().then((devices) => {
+  navigator.bluetooth?.getDevices?.().then((devices) => {
     if (devices.length) {
       device.value = devices[0];
     }
