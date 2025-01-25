@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted } from "vue";
 import { Icon } from "@iconify/vue";
 import { refDebounced, useStorage } from "@vueuse/core";
 import { TimerState, useTimer } from "@/shared/timer";
