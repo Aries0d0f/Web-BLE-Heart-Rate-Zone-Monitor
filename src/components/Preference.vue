@@ -362,6 +362,7 @@ watch(
 
         label {
           font-size: 1em;
+          line-height: 1;
           cursor: pointer;
         }
       }
