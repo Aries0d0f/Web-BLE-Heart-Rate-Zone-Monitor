@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from "vue";
+
 import { setupModules } from "@/modules";
 import { signal } from "@/shared/signal";
 import { useTimer } from "@/shared/timer";
@@ -7,7 +9,11 @@ import Controller from "@/components/Controller.vue";
 import Monitor from "@/components/Monitor.vue";
 import Preference from "@/components/Preference.vue";
 
+import type { Feature } from '@/modules/bluetooth/bluetooth.model';
+
 setupModules();
+
+const meters = ref<Map<Feature, number>>(new Map());
 
 const timer = useTimer();
 
@@ -31,7 +37,7 @@ const onShowPreference = signal(false);
         $style.horizontal,
       ]"
     >
-      <Monitor feature="HEART_RATE" />
+      <Monitor :meters feature="HEART_RATE" />
     </div>
     <Controller :timer :on-show-preference />
   </main>

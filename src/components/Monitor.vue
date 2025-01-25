@@ -9,9 +9,9 @@ import type { Feature } from "@/modules/bluetooth/bluetooth.model";
 
 const props = defineProps<{
   feature: Feature;
+  meters: Map<Feature, number>;
 }>();
 
-const value = ref<number>();
 const recycleHook = ref<() => void>();
 
 const feature = computed(() => Features[props.feature]);
@@ -28,7 +28,7 @@ onPair((device) => {
             "characteristicvaluechanged",
             () => {
               if (characteristic.value) {
-                value.value = new Int8Array(characteristic.value.buffer)[1]
+                props.meters.set(feature.value.ID, new Int8Array(characteristic.value.buffer)[1])
               }
             },
             true
@@ -51,7 +51,7 @@ onPair((device) => {
 onForget((device) => {
   recycleHook.value?.();
   device.gatt?.disconnect();
-  value.value = undefined;
+  props.meters.delete(feature.value.ID);
 });
 </script>
 
@@ -64,11 +64,11 @@ onForget((device) => {
         $style.flex,
         $style.vertical,
         {
-          [$style.inactive]: value === undefined,
+          [$style.inactive]: !props.meters.has(feature.ID),
         },
       ]"
     >
-      <span>{{ value ?? "--" }}</span>
+      <span>{{ props.meters.get(feature.ID) ?? "--" }}</span>
       <Icon :class="$style.icon" :icon="feature.Icon" />
     </h1>
   </div>
