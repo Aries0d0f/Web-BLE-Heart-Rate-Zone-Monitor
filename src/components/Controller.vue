@@ -10,9 +10,11 @@ import { defaultPreferences } from "@/model/preference.model";
 
 import type { Signal } from "@/shared/signal";
 import type { Preference } from "@/model/preference.model";
+import { TimerState, type Timer } from "@/shared/timer";
 
 const preferences = useStorage<Preference>("preferences", defaultPreferences);
 const props = defineProps<{
+  timer: Timer;
   onShowPreference: Signal<boolean>;
 }>();
 
@@ -22,6 +24,48 @@ const features = [Features.HEART_RATE.Service];
 </script>
 
 <template>
+  <div
+    :class="[
+      $style['action-container'],
+      $style.wrapper,
+      $style.flex,
+      $style.horizontal,
+    ]"
+  >
+    <template v-if="timer.state.value === TimerState.INITIAL">
+      <button
+        :class="[$style.wrapper, $style.flex, $style.horizontal, $style.large]"
+        @click="props.timer.start"
+      >
+        <Icon :class="$style.icon" icon="fa6-solid:circle-play" />
+      </button>
+    </template>
+    <template v-else>
+      <template v-if="timer.state.value === TimerState.RUNNING">
+        <button
+          :class="[$style.wrapper, $style.flex, $style.horizontal]"
+          @click="props.timer.pause"
+        >
+          <Icon :class="$style.icon" icon="fa6-solid:circle-pause" />
+        </button>
+      </template>
+      <template v-else>
+        <button
+          :class="[$style.wrapper, $style.flex, $style.horizontal]"
+          @click="props.timer.resume"
+        >
+          <Icon :class="$style.icon" icon="fa6-solid:circle-play" />
+        </button>
+      </template>
+      <h1>{{ timer.clock.value.formatted }}</h1>
+      <button
+        :class="[$style.wrapper, $style.flex, $style.horizontal]"
+        @click="props.timer.stop"
+      >
+        <Icon :class="$style.icon" icon="fa6-solid:circle-stop" />
+      </button>
+    </template>
+  </div>
   <div
     :class="[
       $style['toolbar-container'],
@@ -59,9 +103,65 @@ const features = [Features.HEART_RATE.Service];
 <style module scoped lang="scss">
 @use "@/assets/styles/modules/wrapper.module" as wrapper;
 
+.action {
+  &-container {
+    --wrapper-gap: 0.5em;
+
+    width: var(--monitor-width);
+    place-items: center;
+    place-content: center;
+    height: 3em;
+
+    > h1 {
+      margin: 0;
+      color: var(--color-gray-300);
+      line-height: 1;
+      font-size: 1.5em;
+    }
+
+    > button {
+      background-color: transparent;
+      appearance: none;
+      border-radius: 50%;
+      border: none;
+      height: fit-content;
+      width: fit-content;
+      cursor: pointer;
+
+      &:hover {
+        > .icon {
+          background-color: var(--color-gray-300);
+
+          > :deep(path) {
+            fill: var(--color-gray-700);
+          }
+        }
+      }
+
+      > .icon {
+        background-color: var(--color-gray-500);
+        font-size: 1.7em;
+        border-radius: 50%;
+
+        > :deep(path) {
+          fill: var(--color-gray-900);
+          transform-origin: center;
+          transform: scale(1.1);
+        }
+      }
+
+      &.large {
+        > .icon {
+          font-size: 3em;
+        }
+      }
+    }
+  }
+}
+
 .toolbar {
   &-container {
-    --wrapper-gap: 1em;
+    --wrapper-gap: 0.5em;
 
     > button {
       --wrapper-gap: 1em;

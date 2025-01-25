@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { setupModules } from "@/modules";
 import { signal } from "@/shared/signal";
+import { useTimer } from "@/shared/timer";
+
 import Controller from "@/components/Controller.vue";
 import Monitor from "@/components/Monitor.vue";
 import Preference from "@/components/Preference.vue";
 
 setupModules();
+
+const timer = useTimer();
 
 const onShowPreference = signal(false);
 </script>
@@ -29,7 +33,7 @@ const onShowPreference = signal(false);
     >
       <Monitor feature="HEART_RATE" />
     </div>
-    <Controller :on-show-preference />
+    <Controller :timer :on-show-preference />
   </main>
   <div
     @click.self.passive="onShowPreference.set(false)"
@@ -52,7 +56,7 @@ const onShowPreference = signal(false);
 
 .viewport {
   &-container {
-    --wrapper-gap: 5em;
+    --wrapper-gap: 1em;
     --monitor-width: 10em;
 
     background-color: var(--color-black);
@@ -116,7 +120,8 @@ const onShowPreference = signal(false);
 
     > * {
       position: fixed !important;
-      box-shadow: 20px 28px 20px rgba(0,0,0,0.05), 9px 12px 15px rgba(0,0,0,0.09), 2px 3px 8px rgba(0,0,0,0.1);
+      box-shadow: 20px 28px 20px rgba(0, 0, 0, 0.05),
+        9px 12px 15px rgba(0, 0, 0, 0.09), 2px 3px 8px rgba(0, 0, 0, 0.1);
 
       &::before {
         content: "";
