@@ -166,7 +166,7 @@ const features = [Features.HEART_RATE.Service];
     > button {
       --wrapper-gap: 1em;
 
-      padding: 0.5em 1em;
+      padding: 0.5em 0.75em;
       appearance: none;
       background-color: var(--color-gray-900);
       color: var(--color-gray-500);
@@ -188,6 +188,8 @@ const features = [Features.HEART_RATE.Service];
 
       > span {
         padding-right: 1em;
+        width: 100%;
+        text-align: center;
       }
 
       > .icon {
