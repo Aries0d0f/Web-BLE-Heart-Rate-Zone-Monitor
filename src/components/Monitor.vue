@@ -79,7 +79,7 @@ onForget((device) => {
 @use "@/assets/styles/modules/wrapper.module" as wrapper;
 
 .card {
-  --wrapper-gap: 0.5em;
+  --wrapper-gap: 1em;
 
   padding: 1em;
   border-radius: 0.5em;
