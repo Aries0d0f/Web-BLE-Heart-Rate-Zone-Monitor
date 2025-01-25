@@ -1,7 +1,14 @@
-import { computed, ref } from "vue";
+import { computed, ref, toValue, type MaybeRef } from "vue";
 import { useIntervalFn } from "@vueuse/core";
 
 export type Timer = ReturnType<typeof useTimer>;
+
+export type TimerHooks = {
+  onPause: () => void,
+  onResume: () => void,
+  onStart: () => void,
+  onStop: () => void
+}
 
 export enum TimerState {
   RUNNING = "running",
@@ -9,7 +16,7 @@ export enum TimerState {
   INITIAL = "initial",
 }
 
-export const useTimer = () => {
+export const useTimer = (hooks?: MaybeRef<TimerHooks | undefined>) => {
   const timestamp = ref(0);
   const controller = useIntervalFn(
     () => {
@@ -19,22 +26,23 @@ export const useTimer = () => {
     { immediate: false, immediateCallback: false }
   );
 
+  const $hooks = computed(() => toValue(hooks));
   const clock = computed(() => {
     const hours = Math.floor(timestamp.value / 3600);
     const minutes = Math.floor((timestamp.value % 3600) / 60);
     const seconds = timestamp.value % 60;
 
     const result = {
-      hours: String(hours).padStart(2, '0'),
-      minutes: String(minutes).padStart(2, '0'),
-      seconds: String(seconds).padStart(2, '0')
+      hours: String(hours).padStart(2, "0"),
+      minutes: String(minutes).padStart(2, "0"),
+      seconds: String(seconds).padStart(2, "0"),
     };
 
     return {
       ...result,
-      formatted: `${result.hours}:${result.minutes}:${result.seconds}`
-    }
-  })
+      formatted: `${result.hours}:${result.minutes}:${result.seconds}`,
+    };
+  });
   const state = computed<TimerState>(() =>
     controller.isActive.value
       ? TimerState.RUNNING
@@ -48,13 +56,21 @@ export const useTimer = () => {
     clock,
     timestamp,
     isActive: controller.isActive,
-    resume: controller.resume,
-    pause: controller.pause,
+    resume: () => {
+      $hooks.value?.onResume();
+      controller.resume();
+    },
+    pause: () => {
+      $hooks.value?.onPause();
+      controller.pause();
+    },
     start: () => {
       timestamp.value = 0;
       controller.resume();
+      $hooks.value?.onStart();
     },
     stop: () => {
+      $hooks.value?.onStop();
       controller.pause();
       timestamp.value = 0;
     },
