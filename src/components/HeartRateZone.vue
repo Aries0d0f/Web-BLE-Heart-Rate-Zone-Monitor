@@ -191,7 +191,7 @@ onMounted(() => {
             $style[zone.id],
             {
               [$style.active]:
-                props.heartRate && zone.active && isGlobalTimerInitialized(),
+                props.heartRate && zone.active,
             },
           ]"
         >
