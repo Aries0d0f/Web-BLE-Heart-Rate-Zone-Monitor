@@ -332,6 +332,7 @@ onMounted(() => {
           <label :class="[$style.wrapper, $style.flex, $style.vertical]">
             <span>Zone 1 Override</span>
             <span>
+              <i>*Notice: Only take effect after page reload</i><br />
               Count as Zone 1 when your heart rate is below the Zone 1
               threshold.
             </span>
