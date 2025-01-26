@@ -331,12 +331,18 @@ const onLactateThresholdHeartRateInputBlur = () => {
     width: fit-content;
     height: fit-content;
     max-width: 90vw;
+    overflow: hidden;
 
-    @media screen and (max-width: 340px) {
+    @media screen and (((max-width: 640px) and (max-height: 900px)) or (max-width: 480px) or (max-height: 768px)) {
       --wrapper-gap: 1.5em;
       --dialog-border-radius: 1.5em;
 
-      max-width: 95vw;
+      width: 100cqw;
+      max-width: 100cqw;
+      min-height: 100cqh;
+      border: none;
+      border-radius: 0;
+      overflow: scroll;
       padding: 1em;
     }
 
@@ -354,6 +360,14 @@ const onLactateThresholdHeartRateInputBlur = () => {
 
       place-items: center;
       place-content: space-between;
+      position: sticky !important;
+      top: -1em;
+      background-color: inherit;
+      z-index: 1;
+      margin: -1em;
+      padding: 1em;
+      margin-bottom: 0;
+      padding-bottom: 1em;
 
       h1 {
         color: var(--color-gray-500);

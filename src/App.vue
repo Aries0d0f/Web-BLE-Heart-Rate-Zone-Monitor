@@ -360,6 +360,7 @@ onForget(() => {
     transition: backdrop-filter 0.3s ease-in-out;
     container: popup / size;
     z-index: 100000;
+    overflow: scroll;
     zoom: 1;
 
     &:has(*) {
@@ -368,7 +369,6 @@ onForget(() => {
     }
 
     > * {
-      position: fixed !important;
       box-shadow: 20px 28px 20px rgba(0, 0, 0, 0.05),
         9px 12px 15px rgba(0, 0, 0, 0.09), 2px 3px 8px rgba(0, 0, 0, 0.1);
 
