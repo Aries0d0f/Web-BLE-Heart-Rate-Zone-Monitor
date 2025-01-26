@@ -137,7 +137,6 @@ const setupTimerHooksHandler = (hooks: TimerHooks) => {
         left: calc((100% - 100cqw) / 2);
         height: 100cqh;
         width: 100cqw;
-        backdrop-filter: blur(6px);
         pointer-events: none;
         z-index: -10;
       }
