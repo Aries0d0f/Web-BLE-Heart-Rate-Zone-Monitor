@@ -197,6 +197,20 @@ watch(
             />
           </div>
         </template>
+        <div
+          :class="[
+            $style.field,
+            $style.wrapper,
+            $style.flex,
+            $style.horizontal,
+          ]"
+        >
+          <label :class="[$style.wrapper, $style.flex, $style.vertical]">
+            <span>Zone 1 Override</span>
+            <span>Count as Zone 1 when your heart rate is below the Zone 1 threshold.</span>
+          </label>
+          <input type="checkbox" v-model="preferences.overrideZone1" />
+        </div>
       </template>
     </div>
   </div>

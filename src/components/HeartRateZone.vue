@@ -75,7 +75,7 @@ const zones = computed(() =>
       id: `zone-${index + 1}`,
       name: `Zone ${index + 1}`,
       min:
-        index === 0
+        index === 0 && preferences.value.overrideZone1
           ? 0
           : heartRateZoneFormula[formula.value](
               zone,
@@ -147,7 +147,7 @@ watch(
     }
   },
   {
-    immediate: true
+    immediate: true,
   }
 );
 

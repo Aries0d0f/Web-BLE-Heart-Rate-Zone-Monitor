@@ -14,6 +14,7 @@ export type Preference = {
       maxHeartRate?: never;
       restingHeartRate?: never;
       lactateThresholdHeartRate?: never;
+      overrideZone1?: never;
     }
   | {
       enableHeartRateZone: true;
@@ -21,6 +22,7 @@ export type Preference = {
       maxHeartRate?: number;
       restingHeartRate: number;
       lactateThresholdHeartRate: number;
+      overrideZone1: boolean;
     }
 );
 
@@ -32,4 +34,5 @@ export const defaultPreferences: Preference = {
   maxHeartRate: undefined,
   restingHeartRate: 60,
   lactateThresholdHeartRate: 150,
+  overrideZone1: false,
 };
