@@ -46,6 +46,11 @@ const onLactateThresholdHeartRateInputBlur = () => {
       defaultPreferences.lactateThresholdHeartRate;
   }
 };
+
+const resetPreferenceHandler = () => {
+  preferences.value = defaultPreferences;
+  window.location.reload();
+};
 </script>
 
 <template>
@@ -325,6 +330,29 @@ const onLactateThresholdHeartRateInputBlur = () => {
           </label>
           <input type="checkbox" v-model="preferences.overrideZone1" />
         </div>
+        <div
+          :class="[
+            $style.field,
+            $style.wrapper,
+            $style.flex,
+            $style.horizontal,
+          ]"
+        >
+          <label :class="[$style.wrapper, $style.flex, $style.vertical]">
+            <span>Reset Preferences</span>
+            <span>
+              <i>*Notice: This action cannot be undo.</i><br />
+              Reset all preferences to default values then reload.
+            </span>
+          </label>
+          <button
+            @click="resetPreferenceHandler"
+            :class="[$style.wrapper, $style.flex, $style.horizontal, $style.danger]"
+          >
+            <Icon icon="fa6-solid:rotate" />
+            <span>Reset</span>
+          </button>
+        </div>
       </template>
     </div>
   </div>
@@ -421,14 +449,18 @@ const onLactateThresholdHeartRateInputBlur = () => {
         background-color: var(--color-gray-800);
         border: 1px solid var(--color-gray-500);
         border-radius: 0.5em;
-        color: var(--color-gray-500);
-        font-size: 1em;
         padding: 0.5em;
         width: 5em;
         height: 2em;
         outline: none;
         flex-shrink: 0;
         cursor: pointer;
+
+        &,
+        &::placeholder {
+          color: var(--color-gray-500);
+          font-size: 1em;
+        }
 
         &[type="checkbox"] {
           display: inline-flex;
@@ -460,6 +492,26 @@ const onLactateThresholdHeartRateInputBlur = () => {
               right: 0.125em;
             }
           }
+        }
+      }
+
+      > button {
+        --wrapper-gap: 0.75em;
+
+        background-color: var(--color-gray-800);
+        color: var(--color-gray-500);
+        place-content: center;
+        place-items: center;
+        border-radius: 0.5em;
+        padding: 0.5em 1em;
+        font-size: 1em;
+
+        &:hover {
+          background-color: var(--color-gray-700);
+        }
+
+        &.danger {
+          color: var(--color-red-500);
         }
       }
 
