@@ -1,7 +1,8 @@
-import { fileURLToPath, URL } from 'node:url';
+import { fileURLToPath, URL } from "node:url";
 
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
+import Unfonts from "unplugin-fonts/vite";
 
 import { VitePWA } from "vite-plugin-pwa";
 
@@ -22,13 +23,25 @@ export default defineConfig({
       },
       manifest: {
         name: "Web BLE Heart Rate Zone Monitor",
-        theme_color: "#000000"
+        theme_color: "#000000",
+      },
+    }),
+    Unfonts({
+      google: {
+        families: [
+          {
+            name: "Roboto",
+            styles: "wght@400;700",
+          },
+        ],
+        display: "swap",
+        injectTo: "body",
       },
     }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
   },
 });
