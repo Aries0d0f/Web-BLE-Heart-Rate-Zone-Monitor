@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, onMounted } from "vue";
 import { Icon } from "@iconify/vue";
 import { useStorage } from "@vueuse/core";
 
@@ -28,6 +28,16 @@ const onAgeInputBlur = () => {
   }
 };
 
+const onMaxHeartRateInputBlur = () => {
+  if (
+    !preferences.value.maxHeartRate ||
+    preferences.value.maxHeartRate < 60 ||
+    preferences.value.maxHeartRate > 290
+  ) {
+    preferences.value.maxHeartRate = HRmax.value;
+  }
+};
+
 const onRestingHeartRateInputBlur = () => {
   if (
     !preferences.value.restingHeartRate ||
@@ -51,6 +61,10 @@ const resetPreferenceHandler = () => {
   preferences.value = defaultPreferences;
   window.location.reload();
 };
+
+onMounted(() => {
+  onMaxHeartRateInputBlur();
+})
 </script>
 
 <template>
@@ -226,19 +240,22 @@ const resetPreferenceHandler = () => {
         >
           <label :class="[$style.wrapper, $style.flex, $style.vertical]">
             <span>Max Heart Rate</span>
-            <template
-              v-if="
-                !preferences.maxHeartRate || HRmax === preferences.maxHeartRate
-              "
-            >
-              <span>HRmax = Round(206.9 – (0.67 x age))</span>
-            </template>
-            <template v-else>
-              <i>Custom Value</i>
-            </template>
+            <span>
+              <template
+                v-if="
+                  preferences.maxHeartRate && HRmax !== preferences.maxHeartRate
+                "
+              >
+                <i>
+                  *Notice: Custom HRmax is in used and override the auto calculated value by the formula:
+                </i><br />
+              </template>
+              HRmax = Round(206.9 – (0.67 x age))
+            </span>
           </label>
           <input
             v-model="preferences.maxHeartRate"
+            @blur="onMaxHeartRateInputBlur"
             :placeholder="String(HRmax)"
             type="number"
             inputmode="numeric"
