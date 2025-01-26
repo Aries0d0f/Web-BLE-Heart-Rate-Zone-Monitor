@@ -5,29 +5,66 @@ import { Icon } from "@iconify/vue";
 import { setupModules } from "@/modules";
 import { useBluetooth } from "./modules/bluetooth/bluetooth.service";
 import { signal } from "@/shared/signal";
-import { useTimer } from "@/shared/timer";
+import { TimerState, useTimer } from "@/shared/timer";
 
 import Controller from "@/components/Controller.vue";
 import Monitor from "@/components/Monitor.vue";
 import Preference from "@/components/Preference.vue";
 import HeartRateZone from "@/components/HeartRateZone.vue";
 import { BluetoothStatus, Features } from "@/modules/bluetooth/bluetooth.model";
+import {
+  TriggerModeOnTimerConnect,
+  TriggerModeOnTimerDisconnect,
+  defaultPreferences,
+} from "@/model/preference.model";
 
 import type { Feature } from "@/modules/bluetooth/bluetooth.model";
 import type { TimerHooks } from "@/shared/timer";
+import type { Preference as PreferenceType } from "@/model/preference.model";
 
 setupModules();
+
+const preferences = useStorage<PreferenceType>(
+  "preferences",
+  defaultPreferences
+);
 
 const meters = ref<Map<Feature, number>>(new Map());
 const timerHooks = ref<TimerHooks>();
 const timer = useTimer(timerHooks);
-const { status } = useBluetooth();
+const { status, onPair, onForget } = useBluetooth();
 
 const onShowPreference = signal(false);
 
 const setupTimerHooksHandler = (hooks: TimerHooks) => {
   timerHooks.value = hooks;
 };
+
+onPair(() => {
+  switch (preferences.value.autoTriggerTimerOnConnect) {
+    case TriggerModeOnTimerConnect.START:
+      if (timer.state.value === TimerState.INITIAL) {
+        timer.start();
+      } else if (!timer.isActive.value) {
+        timer.resume();
+      }
+      break;
+    case TriggerModeOnTimerConnect.RESTART:
+      timer.start();
+      break;
+  }
+});
+
+onForget(() => {
+  switch (preferences.value.autoTriggerTimerOnDisconnect) {
+    case TriggerModeOnTimerDisconnect.STOP:
+      timer.stop();
+      break;
+    case TriggerModeOnTimerDisconnect.PAUSE:
+      timer.pause();
+      break;
+  }
+});
 </script>
 
 <template>
