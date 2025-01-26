@@ -37,7 +37,7 @@ const features = [Features.HEART_RATE.Service];
         :class="[$style.wrapper, $style.flex, $style.horizontal, $style.large]"
         @click="props.timer.start"
       >
-        <Icon :class="$style.icon" icon="fa6-solid:circle-play" />
+        <Icon :class="[$style.icon, $style.align]" icon="fa6-solid:play" />
       </button>
     </template>
     <template v-else>
@@ -46,7 +46,7 @@ const features = [Features.HEART_RATE.Service];
           :class="[$style.wrapper, $style.flex, $style.horizontal]"
           @click="props.timer.pause"
         >
-          <Icon :class="$style.icon" icon="fa6-solid:circle-pause" />
+          <Icon :class="$style.icon" icon="fa6-solid:pause" />
         </button>
       </template>
       <template v-else>
@@ -54,7 +54,7 @@ const features = [Features.HEART_RATE.Service];
           :class="[$style.wrapper, $style.flex, $style.horizontal]"
           @click="props.timer.resume"
         >
-          <Icon :class="$style.icon" icon="fa6-solid:circle-play" />
+          <Icon :class="[$style.icon, $style.align]" icon="fa6-solid:play" />
         </button>
       </template>
       <h1>{{ timer.clock.value.formatted }}</h1>
@@ -62,7 +62,7 @@ const features = [Features.HEART_RATE.Service];
         :class="[$style.wrapper, $style.flex, $style.horizontal]"
         @click="props.timer.stop"
       >
-        <Icon :class="$style.icon" icon="fa6-solid:circle-stop" />
+        <Icon :class="$style.icon" icon="fa6-solid:stop" />
       </button>
     </template>
   </div>
@@ -120,39 +120,42 @@ const features = [Features.HEART_RATE.Service];
     }
 
     > button {
-      background-color: transparent;
+      background-color: var(--color-gray-900);
       appearance: none;
       border-radius: 50%;
       border: none;
-      height: fit-content;
-      width: fit-content;
+      place-content: center;
+      place-items: center;
+      line-height: 1;
+      height: 1.7em;
+      width: 1.7em;
       cursor: pointer;
 
       &:hover {
-        > .icon {
-          background-color: var(--color-gray-300);
+        background-color: var(--color-gray-700);
 
-          > :deep(path) {
-            fill: var(--color-gray-700);
-          }
+        > .icon {
+          color: var(--color-gray-300);
         }
       }
 
       > .icon {
-        background-color: var(--color-gray-500);
-        font-size: 1.7em;
-        border-radius: 50%;
+        color: var(--color-gray-500);
+        font-size: 1em;
+        flex-shrink: 0;
 
-        > :deep(path) {
-          fill: var(--color-gray-900);
-          transform-origin: center;
-          transform: scale(1.1);
+        &.align {
+          // Optical alignment
+          margin-left: 0.125em;
         }
       }
 
       &.large {
+        height: 3em;
+        width: 3em;
+
         > .icon {
-          font-size: 3em;
+          font-size: 2em;
         }
       }
     }
