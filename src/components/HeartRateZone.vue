@@ -146,7 +146,7 @@ watch(
     }
   },
   {
-    immediate: true,
+    immediate: true
   }
 );
 
@@ -245,16 +245,27 @@ h3 {
 
   padding: 0.1em 0.3em;
   height: 1.2em;
-  min-width: 1.2em;
-  width: fit-content;
+  width: 1.2em;
+  flex-shrink: 0;
   place-content: center;
   place-items: center;
+  will-change: width;
+  transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.075), opacity 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+  &.active {
+    width: calc(var(--monitor-width) - (1.2em + var(--wrapper-gap)) * 4);
+  }
 
   > .icon,
   > label {
     font-size: 0.7em;
     line-height: 1;
+    flex-shrink: 0;
     vertical-align: middle;
+    white-space: nowrap;
+    will-change: transform;
+    transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1), opacity 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
+    transform-origin: center;
   }
 
   > label {
@@ -273,7 +284,8 @@ h3 {
     opacity: 0.5;
 
     > * {
-      display: none;
+      opacity: 0;
+      transform: scale(0);
     }
   }
 }
