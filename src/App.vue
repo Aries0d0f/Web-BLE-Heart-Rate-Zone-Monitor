@@ -304,7 +304,7 @@ onForget(() => {
         padding-right: 0.25em;
         margin: 0;
         // Optical alignment
-        margin-bottom: -0.25em;
+        margin-bottom: -0.125em;
       }
     }
   }
