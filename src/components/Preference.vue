@@ -435,10 +435,11 @@ const resetPreferenceHandler = () => {
       > label {
         --wrapper-gap: 0.2em;
 
-        color: var(--color-gray-600);
+        color: var(--color-gray-500);
         font-size: 1em;
-
+        
         :last-child:not(:only-child) {
+          color: var(--color-gray-600);
           font-size: 80%;
         }
       }
