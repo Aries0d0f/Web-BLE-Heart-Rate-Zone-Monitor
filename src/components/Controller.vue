@@ -34,8 +34,9 @@ const features = [Features.HEART_RATE.Service];
   >
     <template v-if="timer.state.value === TimerState.INITIAL">
       <button
-        :class="[$style.wrapper, $style.flex, $style.horizontal, $style.large]"
         @click="props.timer.start"
+        :class="[$style.wrapper, $style.flex, $style.horizontal, $style.large]"
+        aria-label="Start Timer"
       >
         <Icon :class="[$style.icon, $style.align]" icon="fa6-solid:play" />
       </button>
@@ -43,24 +44,27 @@ const features = [Features.HEART_RATE.Service];
     <template v-else>
       <template v-if="timer.state.value === TimerState.RUNNING">
         <button
-          :class="[$style.wrapper, $style.flex, $style.horizontal]"
           @click="props.timer.pause"
+          :class="[$style.wrapper, $style.flex, $style.horizontal]"
+          aria-label="Pause Timer"
         >
           <Icon :class="$style.icon" icon="fa6-solid:pause" />
         </button>
       </template>
       <template v-else>
         <button
-          :class="[$style.wrapper, $style.flex, $style.horizontal]"
           @click="props.timer.resume"
+          :class="[$style.wrapper, $style.flex, $style.horizontal]"
+          aria-label="Resume Timer"
         >
           <Icon :class="[$style.icon, $style.align]" icon="fa6-solid:play" />
         </button>
       </template>
       <h1>{{ timer.clock.value.formatted }}</h1>
       <button
-        :class="[$style.wrapper, $style.flex, $style.horizontal]"
         @click="props.timer.stop"
+        :class="[$style.wrapper, $style.flex, $style.horizontal]"
+        aria-label="Stop Timer"
       >
         <Icon :class="$style.icon" icon="fa6-solid:stop" />
       </button>
