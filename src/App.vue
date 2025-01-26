@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { Icon } from "@iconify/vue";
 
 import { setupModules } from "@/modules";
+import { useBluetooth } from "./modules/bluetooth/bluetooth.service";
 import { signal } from "@/shared/signal";
 import { useTimer } from "@/shared/timer";
 
@@ -9,17 +11,17 @@ import Controller from "@/components/Controller.vue";
 import Monitor from "@/components/Monitor.vue";
 import Preference from "@/components/Preference.vue";
 import HeartRateZone from "@/components/HeartRateZone.vue";
-import { Features } from '@/modules/bluetooth/bluetooth.model';
+import { BluetoothStatus, Features } from "@/modules/bluetooth/bluetooth.model";
 
-import type { Feature } from '@/modules/bluetooth/bluetooth.model';
-import type { TimerHooks } from '@/shared/timer';
+import type { Feature } from "@/modules/bluetooth/bluetooth.model";
+import type { TimerHooks } from "@/shared/timer";
 
 setupModules();
 
 const meters = ref<Map<Feature, number>>(new Map());
-
 const timerHooks = ref<TimerHooks>();
 const timer = useTimer(timerHooks);
+const { status } = useBluetooth();
 
 const onShowPreference = signal(false);
 
@@ -37,7 +39,53 @@ const setupTimerHooksHandler = (hooks: TimerHooks) => {
       $style.vertical,
     ]"
   >
-    <HeartRateZone :heart-rate="meters.get(Features.HEART_RATE.ID)" @setup-hooks="setupTimerHooksHandler" />
+    <template v-if="status !== BluetoothStatus.NORMAL">
+      <div
+        :class="[
+          $style['viewport-banner'],
+          $style.wrapper,
+          $style.flex,
+          $style.horizontal,
+          {
+            [$style.warn]: status === BluetoothStatus.UNAUTHORIZED,
+            [$style.error]:
+              status === BluetoothStatus.UNSUPPORTED ||
+              status === BluetoothStatus.DISABLED,
+          },
+        ]"
+      >
+        <template v-if="status === BluetoothStatus.UNKNOWN">
+          <Icon :class="$style.icon" icon="fa6-solid:gear" />
+          <p>Checking Bluetooth availability...</p>
+        </template>
+        <template v-else-if="status === BluetoothStatus.UNAUTHORIZED">
+          <Icon :class="$style.icon" icon="fa6-solid:triangle-exclamation" />
+          <p>Bluetooth permission is required for this app.</p>
+        </template>
+        <template v-else-if="status === BluetoothStatus.DISABLED">
+          <Icon :class="$style.icon" icon="fa6-solid:circle-xmark" />
+          <p>No Bluetooth available on this platform. Check if it is disabled on the system.</p>
+        </template>
+        <template v-else>
+          <Icon :class="$style.icon" icon="fa6-solid:circle-xmark" />
+          <p>
+            Your browser does not support
+            <a
+              href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API"
+            >
+              Web Bluetooth API
+            </a>
+            which is necessary for this app.
+          </p>
+        </template>
+      </div>
+    </template>
+    <template v-else>
+      <HeartRateZone
+        :heart-rate="meters.get(Features.HEART_RATE.ID)"
+        @setup-hooks="setupTimerHooksHandler"
+      />
+    </template>
     <div
       :class="[
         $style['viewport-wrapper'],
@@ -102,6 +150,43 @@ const setupTimerHooksHandler = (hooks: TimerHooks) => {
 
   &-wrapper {
     --wrapper-gap: 2em;
+  }
+
+  &-banner {
+    --wrapper-gap: 0.5em;
+
+    width: var(--monitor-width);
+    padding: 0.5em;
+    border-radius: 0.5em;
+    background-color: var(--color-gray-900);
+    color: var(--color-gray-500);
+    place-content: center;
+    place-items: center;
+
+    &.error {
+      background-color: var(--color-red-500);
+      color: var(--color-gray-100);
+    }
+
+    &.warn {
+      background-color: var(--color-orange-500);
+      color: var(--color-gray-100);
+    }
+
+    > .icon {
+      flex-shrink: 0;
+    }
+
+    > p {
+      margin: 0;
+      font-size: 0.5em;
+    }
+
+    a {
+      color: inherit;
+      font-weight: bold;
+      text-decoration: none;
+    }
   }
 
   &-dialog {
