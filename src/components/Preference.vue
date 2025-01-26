@@ -18,23 +18,29 @@ const HRmax = computed(() =>
   preferences.value.age ? Math.round(206.9 - 0.67 * preferences.value.age) : 0
 );
 
-watch(
-  () => preferences.value.restingHeartRate,
-  (restingHeartRate) => {
-    if (!restingHeartRate || restingHeartRate < 60) {
-      preferences.value.restingHeartRate = 60;
-    }
+const onAgeInputBlur = () => {
+  if (!preferences.value.age || preferences.value.age < 1) {
+    preferences.value.age = defaultPreferences.age;
   }
-);
+};
 
-watch(
-  () => preferences.value.lactateThresholdHeartRate,
-  (lactateThresholdHeartRate) => {
-    if (!lactateThresholdHeartRate || lactateThresholdHeartRate < 60) {
-      preferences.value.lactateThresholdHeartRate = 60;
-    }
+const onRestingHeartRateInputBlur = () => {
+  if (
+    !preferences.value.restingHeartRate ||
+    preferences.value.restingHeartRate < 60
+  ) {
+    preferences.value.restingHeartRate = defaultPreferences.restingHeartRate;
   }
-);
+};
+
+const onLactateThresholdHeartRateInputBlur = () => {
+  if (
+    !preferences.value.lactateThresholdHeartRate ||
+    preferences.value.lactateThresholdHeartRate < 60
+  ) {
+    preferences.value.lactateThresholdHeartRate = defaultPreferences.lactateThresholdHeartRate;
+  }
+};
 </script>
 
 <template>
@@ -87,7 +93,14 @@ watch(
           <label :class="[$style.wrapper, $style.flex, $style.vertical]">
             <span>Age</span>
           </label>
-          <input type="number" v-model="preferences.age" min="1" max="200" />
+          <input
+            @blur="onAgeInputBlur"
+            v-model="preferences.age"
+            type="number"
+            min="1"
+            max="200"
+            required
+          />
         </div>
         <div
           :class="[
@@ -170,8 +183,9 @@ watch(
               <span>Resting Heart Rate</span>
             </label>
             <input
-              type="number"
+              @blur="onRestingHeartRateInputBlur"
               v-model="preferences.restingHeartRate"
+              type="number"
               min="60"
               max="150"
             />
@@ -190,8 +204,9 @@ watch(
               <span>Lactate Threshold Heart Rate</span>
             </label>
             <input
-              type="number"
+              @blur="onLactateThresholdHeartRateInputBlur"
               v-model="preferences.lactateThresholdHeartRate"
+              type="number"
               min="60"
               max="290"
             />
@@ -207,7 +222,10 @@ watch(
         >
           <label :class="[$style.wrapper, $style.flex, $style.vertical]">
             <span>Zone 1 Override</span>
-            <span>Count as Zone 1 when your heart rate is below the Zone 1 threshold.</span>
+            <span>
+              Count as Zone 1 when your heart rate is below the Zone 1
+              threshold.
+            </span>
           </label>
           <input type="checkbox" v-model="preferences.overrideZone1" />
         </div>
