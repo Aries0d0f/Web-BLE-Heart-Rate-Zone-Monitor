@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, watch } from "vue";
+import { computed } from "vue";
 import { Icon } from "@iconify/vue";
 import { useStorage } from "@vueuse/core";
 
@@ -97,6 +97,7 @@ const onLactateThresholdHeartRateInputBlur = () => {
             @blur="onAgeInputBlur"
             v-model="preferences.age"
             type="number"
+            inputmode="numeric"
             min="1"
             max="200"
             required
@@ -163,9 +164,10 @@ const onLactateThresholdHeartRateInputBlur = () => {
             </template>
           </label>
           <input
-            type="number"
-            :placeholder="String(HRmax)"
             v-model="preferences.maxHeartRate"
+            :placeholder="String(HRmax)"
+            type="number"
+            inputmode="numeric"
             min="60"
             max="290"
           />
@@ -183,9 +185,10 @@ const onLactateThresholdHeartRateInputBlur = () => {
               <span>Resting Heart Rate</span>
             </label>
             <input
-              @blur="onRestingHeartRateInputBlur"
               v-model="preferences.restingHeartRate"
+              @blur="onRestingHeartRateInputBlur"
               type="number"
+              inputmode="numeric"
               min="60"
               max="150"
             />
@@ -204,9 +207,10 @@ const onLactateThresholdHeartRateInputBlur = () => {
               <span>Lactate Threshold Heart Rate</span>
             </label>
             <input
-              @blur="onLactateThresholdHeartRateInputBlur"
               v-model="preferences.lactateThresholdHeartRate"
+              @blur="onLactateThresholdHeartRateInputBlur"
               type="number"
+              inputmode="numeric"
               min="60"
               max="290"
             />
