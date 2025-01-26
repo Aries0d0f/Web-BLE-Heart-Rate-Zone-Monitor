@@ -133,8 +133,9 @@ const features = [Features.HEART_RATE.Service];
       line-height: 1;
       height: 1.7em;
       width: 1.7em;
+      flex-shrink: 0;
       cursor: pointer;
-
+      
       &:hover {
         background-color: var(--color-gray-700);
 
