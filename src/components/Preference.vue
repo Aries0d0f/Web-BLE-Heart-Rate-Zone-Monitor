@@ -342,7 +342,7 @@ const onLactateThresholdHeartRateInputBlur = () => {
       min-height: 100cqh;
       border: none;
       border-radius: 0;
-      overflow: scroll;
+      overflow-y: scroll;
       padding: 1em;
     }
 
