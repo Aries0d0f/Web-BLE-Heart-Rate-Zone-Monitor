@@ -141,7 +141,6 @@ const setupUpdateSchedule = () => {
 watch(
   () => activeZone.value?.id,
   (id, preId) => {
-    console.log("activeZone", id, preId);
     if (id !== preId) {
       setupUpdateSchedule();
     }
