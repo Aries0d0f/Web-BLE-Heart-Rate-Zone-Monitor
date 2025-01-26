@@ -306,6 +306,10 @@ onForget(() => {
 
     > button {
       cursor: pointer;
+
+      &:not(.active) {
+        display: none !important;
+      }
     }
 
     .badge {
