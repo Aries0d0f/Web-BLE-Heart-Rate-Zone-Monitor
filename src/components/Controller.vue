@@ -160,7 +160,7 @@ const features = [Features.HEART_RATE.Service];
         width: 3em;
 
         > .icon {
-          font-size: 2em;
+          font-size: 1.625em;
         }
       }
     }
