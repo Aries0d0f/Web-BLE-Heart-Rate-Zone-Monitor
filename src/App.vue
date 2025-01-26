@@ -64,7 +64,10 @@ const setupTimerHooksHandler = (hooks: TimerHooks) => {
         </template>
         <template v-else-if="status === BluetoothStatus.DISABLED">
           <Icon :class="$style.icon" icon="fa6-solid:circle-xmark" />
-          <p>No Bluetooth available on this platform. Check if it is disabled on the system.</p>
+          <p>
+            No Bluetooth available on this platform. Check if it is disabled on
+            the system.
+          </p>
         </template>
         <template v-else>
           <Icon :class="$style.icon" icon="fa6-solid:circle-xmark" />
@@ -97,6 +100,30 @@ const setupTimerHooksHandler = (hooks: TimerHooks) => {
       <Monitor :meters feature="HEART_RATE" />
     </div>
     <Controller :timer :on-show-preference />
+    <footer :class="[$style.wrapper, $style.flex, $style.vertical]">
+      <p>
+        This work is licensed under
+        <a
+          href="https://github.com/Aries0d0f/Web-BLE-Heart-Rate-Zone-Monitor/blob/main/LICENSE"
+          target="_blank"
+          rel="noopener"
+          >MIT-MIT License</a
+        >
+        by
+        <a href="https://aries0d0f.me" target="_blank" rel="noopener"
+          >Aries Cs (@aries0d0f)</a
+        >
+      </p>
+      <a
+        href="https://github.com/Aries0d0f/Web-BLE-Heart-Rate-Zone-Monitor"
+        title="View on GitHub"
+        target="_blank"
+        rel="noopener"
+        aria-label="View on GitHub"
+      >
+        <Icon icon="fa-brands:github" />
+      </a>
+    </footer>
   </main>
   <div
     @click.self.passive="onShowPreference.set(false)"
@@ -145,6 +172,32 @@ const setupTimerHooksHandler = (hooks: TimerHooks) => {
 
     @media screen and (width < 320px) {
       font-size: 24px;
+    }
+
+    footer {
+      --wrapper-gap: 0.125em;
+
+      text-align: center;
+      font-size: 0.75em;
+      color: var(--color-gray-800);
+
+      p {
+        font-size: 0.5em;
+
+        &:hover {
+          color: var(--color-gray-700);
+        }
+      }
+
+      a {
+        font-size: 1em;
+        white-space: nowrap;
+        color: var(--color-gray-700);
+
+        &:hover {
+          color: var(--color-gray-500);
+        }
+      }
     }
   }
 
