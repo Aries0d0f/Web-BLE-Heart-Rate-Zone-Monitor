@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useStorage } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
 
 import { setupModules } from "@/modules";
@@ -32,7 +33,7 @@ const preferences = useStorage<PreferenceType>(
 const meters = ref<Map<Feature, number>>(new Map());
 const timerHooks = ref<TimerHooks>();
 const timer = useTimer(timerHooks);
-const { status, onPair, onForget } = useBluetooth();
+const { device, status, onPair, onForget } = useBluetooth();
 
 const onShowPreference = signal(false);
 
@@ -76,6 +77,31 @@ onForget(() => {
       $style.vertical,
     ]"
   >
+    <div
+      :class="[
+        $style['viewport-topbar'],
+        $style.wrapper,
+        $style.flex,
+        $style.horizontal,
+      ]"
+    >
+      <div
+        :class="[
+          $style.badge,
+          $style.wrapper,
+          $style.flex,
+          $style.horizontal,
+          {
+            [$style.active]: device,
+          },
+        ]"
+      >
+        <Icon :class="$style.icon" :icon="device ? 'fa6-brands:bluetooth-b' : 'mdi:bluetooth-off'" />
+        <template v-if="device?.name">
+          <p>{{ device?.name }}</p>
+        </template>
+      </div>
+    </div>
     <template v-if="status !== BluetoothStatus.NORMAL">
       <div
         :class="[
@@ -241,6 +267,46 @@ onForget(() => {
 
   &-wrapper {
     --wrapper-gap: 2em;
+  }
+
+  &-topbar {
+    --wrapper-gap: 5em;
+
+    width: var(--monitor-width);
+    place-content: center;
+    place-items: center;
+
+    .badge {
+      --wrapper-gap: 0.4em;
+
+      padding: 0.25em 0.375em;
+      border-radius: 1em;
+      background-color: var(--color-gray-900);
+      color: var(--color-gray-500);
+      place-content: center;
+      place-items: center;
+      min-width: 1em;
+      height: 1em;
+      font-size: 0.875em;
+
+      &:not(.active) {
+        opacity: 0.3;
+      }
+
+      > p,
+      > .icon {
+        font-size: 0.5em;
+        flex-shrink: 0;
+        line-height: 1;
+      }
+
+      p {
+        padding-right: 0.25em;
+        margin: 0;
+        // Optical alignment
+        margin-bottom: -0.25em;
+      }
+    }
   }
 
   &-banner {
