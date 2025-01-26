@@ -46,6 +46,9 @@ const preferences = useStorage<Preference>("preferences", defaultPreferences);
 
 const isGlobalTimerInitialized = signal(false);
 
+const chartHeightRatio = computed(() =>
+  Math.max(60, ...zones.value.map((zone) => zone.timer.timestamp.value))
+);
 const HR = computed(() => props.heartRate || 0);
 const HRdebounced = refDebounced(HR, 1000);
 const HRmax = computed(
@@ -146,7 +149,7 @@ watch(
     }
   },
   {
-    immediate: true
+    immediate: true,
   }
 );
 
@@ -178,6 +181,9 @@ onMounted(() => {
         $style.wrapper,
         $style.flex,
         $style.horizontal,
+        {
+          [$style.chart]: isGlobalTimerInitialized(),
+        },
       ]"
     >
       <template v-for="zone in zones" :key="zone.id">
@@ -189,13 +195,17 @@ onMounted(() => {
             $style.horizontal,
             $style[zone.id],
             {
-              [$style.active]:
-                props.heartRate && zone.active,
+              [$style.active]: props.heartRate && zone.active,
             },
           ]"
+          :style="{
+            '--value': zone.timer.timestamp.value / chartHeightRatio || 0,
+          }"
         >
-          <Icon :class="$style.icon" icon="fa6-solid:heart" />
-          <label>{{ zone.name }}</label>
+          <label :class="[$style.wrapper, $style.flex, $style.horizontal]">
+            <Icon :class="$style.icon" icon="fa6-solid:heart" />
+            <span>{{ zone.name }}</span>
+          </label>
         </div>
       </template>
     </div>
@@ -239,44 +249,74 @@ h3 {
 .zone {
   &-container {
     --wrapper-gap: 0.2em;
+
+    place-content: center;
+    place-items: end;
+    height: 1.2em;
+    width: var(--monitor-width);
+    will-change: height;
+    transition: height 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+    &.chart {
+      height: 3.2em;
+
+      > .zone {
+        height: calc((3em - 1.2em) * var(--value) + 1.2em);
+      }
+    }
   }
 
   --wrapper-gap: 0.3em;
 
-  padding: 0.1em 0.3em;
   height: 1.2em;
   width: 1.2em;
+  border-radius: 0.6em;
+  font-weight: bold;
   flex-shrink: 0;
   place-content: center;
-  place-items: center;
-  will-change: width;
-  transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.075), opacity 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+  place-items: end;
+  will-change: width, height, opacity;
+  transition: height 1s linear,
+    width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.075),
+    opacity 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
 
   &.active {
     width: calc(var(--monitor-width) - (1.2em + var(--wrapper-gap)) * 4);
   }
 
-  > .icon,
   > label {
-    font-size: 0.7em;
-    line-height: 1;
-    flex-shrink: 0;
-    vertical-align: middle;
-    white-space: nowrap;
-    will-change: transform;
-    transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1), opacity 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
-    transform-origin: center;
-  }
+    --wrapper-gap: 0.3em;
 
-  > label {
-    margin-right: 0.2em;
+    height: 1.2em;
+    padding: 0.1em 0.3em;
+    place-content: center;
+    place-items: center;
+    flex-shrink: 0;
+    will-change: transform;
+    transition: transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1),
+      opacity 0.1s cubic-bezier(0.075, 0.82, 0.165, 1);
+    transform-origin: center;
+
+    > span,
+    > .icon {
+      flex-shrink: 0;
+      white-space: nowrap;
+      vertical-align: middle;
+      margin-right: 0.2em;
+      font-size: 0.7em;
+      line-height: 1;
+    }
+
+    > span {
+      margin-right: 0.2em;
+      // Optical alignment
+      margin-bottom: -0.1em;
+    }
   }
 
   @each $style, $color in $style-sets {
     &.#{$style} {
       background-color: $color;
-      border-radius: 1em;
-      font-weight: bold;
     }
   }
 
