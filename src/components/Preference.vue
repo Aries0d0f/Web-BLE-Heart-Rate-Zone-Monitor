@@ -3,16 +3,20 @@ import { computed } from "vue";
 import { Icon } from "@iconify/vue";
 import { useStorage } from "@vueuse/core";
 
-import { HeartRateFormula } from "@/model/preference.model";
-import { defaultPreferences } from "@/model/preference.model";
+import {
+  HeartRateFormula,
+  TriggerModeOnTimerConnect,
+  TriggerModeOnTimerDisconnect,
+  defaultPreferences
+} from "@/model/preference.model";
 
 import type { Preference } from "@/model/preference.model";
-
-const preferences = useStorage<Preference>("preferences", defaultPreferences);
 
 const emits = defineEmits<{
   (e: "close"): void;
 }>();
+
+const preferences = useStorage<Preference>("preferences", defaultPreferences);
 
 const HRmax = computed(() =>
   preferences.value.age ? Math.round(206.9 - 0.67 * preferences.value.age) : 0
@@ -38,7 +42,8 @@ const onLactateThresholdHeartRateInputBlur = () => {
     !preferences.value.lactateThresholdHeartRate ||
     preferences.value.lactateThresholdHeartRate < 60
   ) {
-    preferences.value.lactateThresholdHeartRate = defaultPreferences.lactateThresholdHeartRate;
+    preferences.value.lactateThresholdHeartRate =
+      defaultPreferences.lactateThresholdHeartRate;
   }
 };
 </script>
@@ -72,6 +77,78 @@ const onLactateThresholdHeartRateInputBlur = () => {
           <i>*Notice: This may cause unexpected behavior</i>
         </label>
         <input type="checkbox" v-model="preferences.showAllDevices" />
+      </div>
+      <div
+        :class="[$style.field, $style.wrapper, $style.flex, $style.horizontal]"
+      >
+        <label :class="[$style.wrapper, $style.flex, $style.vertical]">
+          <span>Timer Behavior on Connect</span>
+          <span>Timer behavior when Bluetooth device connect</span>
+        </label>
+        <div
+          :class="[
+            $style['option-wrapper'],
+            $style.wrapper,
+            $style.flex,
+            $style.horizontal,
+          ]"
+        >
+          <template
+            v-for="[name, mode] in Object.entries(TriggerModeOnTimerConnect)"
+          >
+            <div
+              @click="() => (preferences.autoTriggerTimerOnConnect = mode)"
+              :class="[
+                $style.option,
+                $style.wrapper,
+                $style.flex,
+                $style.vertical,
+                {
+                  [$style.active]:
+                    preferences.autoTriggerTimerOnConnect === mode,
+                },
+              ]"
+            >
+              <label>{{ name }}</label>
+            </div>
+          </template>
+        </div>
+      </div>
+      <div
+        :class="[$style.field, $style.wrapper, $style.flex, $style.horizontal]"
+      >
+        <label :class="[$style.wrapper, $style.flex, $style.vertical]">
+          <span>Timer Behavior on Disconnect</span>
+          <span>Timer behavior when Bluetooth device disconnect</span>
+        </label>
+        <div
+          :class="[
+            $style['option-wrapper'],
+            $style.wrapper,
+            $style.flex,
+            $style.horizontal,
+          ]"
+        >
+          <template
+            v-for="[name, mode] in Object.entries(TriggerModeOnTimerDisconnect)"
+          >
+            <div
+              @click="() => (preferences.autoTriggerTimerOnDisconnect = mode)"
+              :class="[
+                $style.option,
+                $style.wrapper,
+                $style.flex,
+                $style.vertical,
+                {
+                  [$style.active]:
+                    preferences.autoTriggerTimerOnDisconnect === mode,
+                },
+              ]"
+            >
+              <label>{{ name }}</label>
+            </div>
+          </template>
+        </div>
       </div>
       <div
         :class="[$style.field, $style.wrapper, $style.flex, $style.horizontal]"
@@ -113,6 +190,7 @@ const onLactateThresholdHeartRateInputBlur = () => {
         >
           <label :class="[$style.wrapper, $style.flex, $style.vertical]">
             <span>Formula</span>
+            <span>Formula for calculate heart rate zones</span>
           </label>
           <div
             :class="[
@@ -357,7 +435,7 @@ const onLactateThresholdHeartRateInputBlur = () => {
         }
       }
 
-      @media screen and (max-width: 450px) {
+      @media screen and (max-width: 640px) {
         &:has(> .option-wrapper) {
           --wrapper-gap: 1em;
 
@@ -378,7 +456,7 @@ const onLactateThresholdHeartRateInputBlur = () => {
           flex-shrink: 0;
           overflow: hidden;
 
-          @media screen and (max-width: 450px) {
+          @media screen and (max-width: 640px) {
             width: 100%;
           }
         }

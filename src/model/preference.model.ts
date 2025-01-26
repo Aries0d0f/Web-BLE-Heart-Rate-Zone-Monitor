@@ -4,9 +4,23 @@ export enum HeartRateFormula {
   "LTHR" = "LTHR",
 }
 
+export enum TriggerModeOnTimerConnect {
+  NONE = 'None',
+  START = 'Start',
+  RESTART = 'Restart',
+}
+
+export enum TriggerModeOnTimerDisconnect {
+  NONE = 'None',
+  PAUSE = 'Pause',
+  STOP = 'Stop',
+}
+
 export type Preference = {
   showAllDevices: boolean;
   age: number;
+  autoTriggerTimerOnConnect: TriggerModeOnTimerConnect;
+  autoTriggerTimerOnDisconnect: TriggerModeOnTimerDisconnect;
 } & (
   | {
       enableHeartRateZone: false;
@@ -35,4 +49,6 @@ export const defaultPreferences: Preference = {
   restingHeartRate: 60,
   lactateThresholdHeartRate: 150,
   overrideZone1: false,
+  autoTriggerTimerOnConnect: TriggerModeOnTimerConnect.NONE,
+  autoTriggerTimerOnDisconnect: TriggerModeOnTimerDisconnect.PAUSE,
 };
