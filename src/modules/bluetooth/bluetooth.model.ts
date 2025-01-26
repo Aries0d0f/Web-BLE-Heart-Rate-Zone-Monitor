@@ -18,4 +18,4 @@ export enum BluetoothStatus {
 
 export type Feature = keyof typeof Features;
 
-export type BluetoothDeviceHook = (device: BluetoothDevice) => void;
+export type BluetoothDeviceHook = (device: BluetoothDevice) => Promise<void> | void;

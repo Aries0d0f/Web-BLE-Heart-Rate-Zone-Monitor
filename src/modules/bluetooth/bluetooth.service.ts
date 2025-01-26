@@ -58,7 +58,11 @@ const useBluetooth$ = (_ctx?: Context) => {
   const execHooks = (hooks: BluetoothDeviceHook[]) => {
     hooks.forEach((hook) => {
       if (device.value) {
-        hook(device.value);
+        hook(device.value)?.catch((exception) => {
+          if (exception instanceof Error && exception.message.includes("no longer")) {
+            forget();
+          }
+        });
       }
     });
   };
