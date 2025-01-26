@@ -150,8 +150,9 @@ const setupTimerHooksHandler = (hooks: TimerHooks) => {
     --monitor-width: 10em;
 
     background-color: var(--color-black);
-    height: 100%;
+    min-height: 100%;
     width: 100%;
+    padding: 1em 0;
     place-content: center;
     place-items: center;
     font-size: 32px;

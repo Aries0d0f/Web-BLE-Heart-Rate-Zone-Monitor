@@ -8,10 +8,22 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  scrollbar-width: none;
+}
+
+body {
+  background-color: var(--color-black);
 }
 
 #app {
+  display: flex;
   position: relative;
-  height: 100vh;
+  min-height: 100vh;
   overflow: clip;
 }
