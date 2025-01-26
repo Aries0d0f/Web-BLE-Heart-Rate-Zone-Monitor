@@ -29,6 +29,7 @@ export type Preference = {
       restingHeartRate?: never;
       lactateThresholdHeartRate?: never;
       overrideZone1?: never;
+      enableChart?: never;
     }
   | {
       enableHeartRateZone: true;
@@ -37,6 +38,7 @@ export type Preference = {
       restingHeartRate: number;
       lactateThresholdHeartRate: number;
       overrideZone1: boolean;
+      enableChart: boolean;
     }
 );
 
@@ -51,4 +53,5 @@ export const defaultPreferences: Preference = {
   overrideZone1: false,
   autoTriggerTimerOnConnect: TriggerModeOnTimerConnect.NONE,
   autoTriggerTimerOnDisconnect: TriggerModeOnTimerDisconnect.PAUSE,
+  enableChart: true,
 };

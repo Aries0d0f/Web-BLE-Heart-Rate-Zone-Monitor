@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { Icon } from "@iconify/vue";
 import { refDebounced, useStorage } from "@vueuse/core";
 import { TimerState, useTimer } from "@/shared/timer";
@@ -10,6 +10,16 @@ import { signal } from "@/shared/signal";
 
 import type { Preference } from "@/model/preference.model";
 import type { TimerHooks } from "@/shared/timer";
+
+type Zone = {
+  index: number;
+  id: string;
+  name: string;
+  min: number;
+  max: number;
+  timer: ReturnType<typeof useTimer>;
+  active: boolean;
+};
 
 const heartRateZoneFormula = {
   [HeartRateFormula.MHR]: (percent: number, HRmax: number, ..._: number[]) =>
@@ -47,7 +57,7 @@ const preferences = useStorage<Preference>("preferences", defaultPreferences);
 const isGlobalTimerInitialized = signal(false);
 
 const chartHeightRatio = computed(() =>
-  Math.max(60, ...zones.value.map((zone) => zone.timer.timestamp.value))
+  Math.max(60, ...zones.value.map((zone) => zone.timer.timestamp))
 );
 const HR = computed(() => props.heartRate || 0);
 const HRdebounced = refDebounced(HR, 1000);
@@ -71,8 +81,30 @@ const formula = computed(
   () => preferences.value.formula || defaultPreferences.formula!
 );
 
-const zones = computed(() =>
-  heartRateZonePercent[formula.value]
+const zones = ref<Zone[]>([]);
+const activeZone = computed(() => zones.value.find((zone) => zone.active));
+
+const setupHooks = () => {
+  emits("setup-hooks", {
+    onStart: () => {
+      isGlobalTimerInitialized.set(true);
+      activeZone.value?.timer.start();
+    },
+    onStop: () => {
+      zones.value.forEach((zone) => zone.timer.stop());
+      isGlobalTimerInitialized.set(false);
+    },
+    onPause: () => {
+      activeZone.value?.timer.pause();
+    },
+    onResume: () => {
+      activeZone.value?.timer.resume();
+    },
+  });
+};
+
+const setupZones = () => {
+  zones.value = heartRateZonePercent[formula.value]
     .map((zone, index, zones) => ({
       index,
       id: `zone-${index + 1}`,
@@ -102,27 +134,7 @@ const zones = computed(() =>
       get active() {
         return HRdebounced.value >= zone.min && HRdebounced.value < zone.max;
       },
-    }))
-);
-const activeZone = computed(() => zones.value.find((zone) => zone.active));
-
-const setupHooks = () => {
-  emits("setup-hooks", {
-    onStart: () => {
-      isGlobalTimerInitialized.set(true);
-      activeZone.value?.timer.start();
-    },
-    onStop: () => {
-      zones.value.forEach((zone) => zone.timer.stop());
-      isGlobalTimerInitialized.set(false);
-    },
-    onPause: () => {
-      activeZone.value?.timer.pause();
-    },
-    onResume: () => {
-      activeZone.value?.timer.resume();
-    },
-  });
+    }));
 };
 
 const setupUpdateSchedule = () => {
@@ -131,7 +143,7 @@ const setupUpdateSchedule = () => {
       if (isGlobalTimerInitialized()) {
         if (zone.active) {
           zone.timer[
-            zone.timer.state.value === TimerState.INITIAL ? "start" : "resume"
+            zone.timer.state === TimerState.INITIAL ? "start" : "resume"
           ]();
         } else {
           zone.timer.pause();
@@ -154,6 +166,7 @@ watch(
 );
 
 onMounted(() => {
+  setupZones();
   setupHooks();
 });
 </script>
@@ -164,11 +177,11 @@ onMounted(() => {
       v-if="props.heartRate && activeZone && isGlobalTimerInitialized()"
     >
       <h3 :class="$style[activeZone.id]">
-        <template v-if="activeZone.timer.clock.value.hours !== '00'">
-          {{ activeZone.timer.clock.value.formatted }}
+        <template v-if="activeZone.timer.clock.hours !== '00'">
+          {{ activeZone.timer.clock.formatted }}
         </template>
         <template v-else>
-          {{ activeZone.timer.clock.value.formatted.substring(3, 10) }}
+          {{ activeZone.timer.clock.formatted.substring(3, 10) }}
         </template>
       </h3>
     </template>
@@ -182,7 +195,7 @@ onMounted(() => {
         $style.flex,
         $style.horizontal,
         {
-          [$style.chart]: isGlobalTimerInitialized(),
+          [$style.chart]: preferences.enableChart && isGlobalTimerInitialized(),
         },
       ]"
     >
@@ -198,9 +211,13 @@ onMounted(() => {
               [$style.active]: props.heartRate && zone.active,
             },
           ]"
-          :style="{
-            '--value': zone.timer.timestamp.value / chartHeightRatio || 0,
-          }"
+          :style="
+            preferences.enableChart
+              ? {
+                  '--value': zone.timer.timestamp / chartHeightRatio || 0,
+                }
+              : {}
+          "
         >
           <label :class="[$style.wrapper, $style.flex, $style.horizontal]">
             <Icon :class="$style.icon" icon="fa6-solid:heart" />

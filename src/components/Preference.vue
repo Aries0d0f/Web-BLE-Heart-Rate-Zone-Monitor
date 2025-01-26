@@ -7,7 +7,7 @@ import {
   HeartRateFormula,
   TriggerModeOnTimerConnect,
   TriggerModeOnTimerDisconnect,
-  defaultPreferences
+  defaultPreferences,
 } from "@/model/preference.model";
 
 import type { Preference } from "@/model/preference.model";
@@ -294,6 +294,20 @@ const onLactateThresholdHeartRateInputBlur = () => {
             />
           </div>
         </template>
+        <div
+          :class="[
+            $style.field,
+            $style.wrapper,
+            $style.flex,
+            $style.horizontal,
+          ]"
+        >
+          <label :class="[$style.wrapper, $style.flex, $style.vertical]">
+            <span>Enable Chart</span>
+            <span> Show heart rate zone chart on the main screen </span>
+          </label>
+          <input type="checkbox" v-model="preferences.enableChart" />
+        </div>
         <div
           :class="[
             $style.field,

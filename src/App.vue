@@ -96,11 +96,39 @@ onForget(() => {
           },
         ]"
       >
-        <Icon :class="$style.icon" :icon="device ? 'fa6-brands:bluetooth-b' : 'mdi:bluetooth-off'" />
+        <Icon
+          :class="$style.icon"
+          :icon="device ? 'fa6-brands:bluetooth-b' : 'mdi:bluetooth-off'"
+        />
         <template v-if="device?.name">
           <p>{{ device?.name }}</p>
         </template>
       </div>
+      <button
+        :class="[
+          $style.badge,
+          $style.wrapper,
+          $style.flex,
+          $style.horizontal,
+          {
+            [$style.active]: timer.state.value !== TimerState.INITIAL,
+          },
+        ]"
+      >
+        <Icon
+          @click="
+            () => {
+              preferences.enableChart = !preferences.enableChart;
+            }
+          "
+          :class="$style.icon"
+          :icon="
+            preferences.enableChart
+              ? 'fa6-solid:chart-simple'
+              : 'fa6-solid:ellipsis'
+          "
+        />
+      </button>
     </div>
     <template v-if="status !== BluetoothStatus.NORMAL">
       <div
@@ -270,16 +298,22 @@ onForget(() => {
   }
 
   &-topbar {
-    --wrapper-gap: 5em;
+    --wrapper-gap: 1em;
 
     width: var(--monitor-width);
     place-content: center;
     place-items: center;
 
+    > button {
+      cursor: pointer;
+    }
+
     .badge {
       --wrapper-gap: 0.4em;
 
+      appearance: none;
       padding: 0.25em 0.375em;
+      border: none;
       border-radius: 1em;
       background-color: var(--color-gray-900);
       color: var(--color-gray-500);
@@ -291,6 +325,10 @@ onForget(() => {
 
       &:not(.active) {
         opacity: 0.3;
+      }
+
+      &:not(:has(p)) {
+        padding: 0.25em;
       }
 
       > p,
