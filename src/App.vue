@@ -301,6 +301,10 @@ onForget(() => {
       }
 
       p {
+        white-space: nowrap;
+        max-width: calc(var(--monitor-width) * 1.2);
+        overflow: hidden;
+        text-overflow: ellipsis;
         padding-right: 0.25em;
         margin: 0;
         // Optical alignment
