@@ -3,6 +3,7 @@ import { nextTick, readonly, ref, watch } from "vue";
 import type { InjectionKey } from "vue";
 
 import { createModuleHook } from "@/modules/utils/module-factory";
+import { BluetoothStatus } from "./bluetooth.model";
 
 import type { Context } from "@/modules/utils/context/context.model";
 import type { BluetoothDeviceHook } from "./bluetooth.model";
@@ -11,6 +12,7 @@ const PROVIDE_KEY: InjectionKey<ReturnType<typeof useBluetooth$>> =
   Symbol.for("Bluetooth");
 
 const useBluetooth$ = (_ctx?: Context) => {
+  const status = ref<BluetoothStatus>(BluetoothStatus.UNKNOWN);
   const device = ref<BluetoothDevice | null>(null);
   const onPairHooks = ref<BluetoothDeviceHook[]>([]);
   const onForgetHooks = ref<BluetoothDeviceHook[]>([]);
@@ -27,7 +29,7 @@ const useBluetooth$ = (_ctx?: Context) => {
               ],
             }
           : {
-              acceptAllDevices: true
+              acceptAllDevices: true,
             }
       )
       .then((bleDevice) => {
@@ -49,7 +51,7 @@ const useBluetooth$ = (_ctx?: Context) => {
 
       nextTick(() => {
         device.value = null;
-      })
+      });
     }
   };
 
@@ -69,11 +71,39 @@ const useBluetooth$ = (_ctx?: Context) => {
     onForgetHooks.value.push(cb);
   };
 
+  const checkState = () => {
+    if (!navigator.bluetooth) {
+      status.value = BluetoothStatus.UNSUPPORTED;
+    } else {
+      navigator.permissions
+        .query({ name: "bluetooth" as PermissionName })
+        .then((result) => {
+          if (result.state === "denied" || result.state === "prompt") {
+            status.value = BluetoothStatus.UNAUTHORIZED;
+          }
+        })
+        .catch(() => {
+          status.value = BluetoothStatus.UNKNOWN;
+        })
+        .finally(() => {
+          navigator.bluetooth.getAvailability().then((isAvailable) => {
+            if (isAvailable) {
+              status.value = BluetoothStatus.NORMAL;
+            } else {
+              status.value = BluetoothStatus.DISABLED;
+            }
+          });
+        });
+    }
+  };
+
   navigator.bluetooth?.getDevices?.().then((devices) => {
     if (devices.length) {
       device.value = devices[0];
     }
   });
+
+  watch(() => navigator.bluetooth, checkState, { immediate: true, deep: true });
 
   watch(
     () => device.value,
@@ -89,6 +119,7 @@ const useBluetooth$ = (_ctx?: Context) => {
 
   return {
     device: readonly(device),
+    status: readonly(status),
     pair,
     forget,
     onPair,
