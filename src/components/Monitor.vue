@@ -28,7 +28,7 @@ onPair((device) => {
             "characteristicvaluechanged",
             () => {
               if (characteristic.value) {
-                props.meters.set(feature.value.ID, new Int8Array(characteristic.value.buffer)[1])
+                props.meters.set(feature.value.ID, new Uint8Array(characteristic.value.buffer)[1])
               }
             },
             true
