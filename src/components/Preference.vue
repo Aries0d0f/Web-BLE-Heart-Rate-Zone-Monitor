@@ -78,15 +78,6 @@ const resetPreferenceHandler = () => {
         :class="[$style.field, $style.wrapper, $style.flex, $style.horizontal]"
       >
         <label :class="[$style.wrapper, $style.flex, $style.vertical]">
-          <span>Show All Bluetooth Devices (even if unsupported)</span>
-          <i>*Notice: This may cause unexpected behavior</i>
-        </label>
-        <input type="checkbox" v-model="preferences.showAllDevices" />
-      </div>
-      <div
-        :class="[$style.field, $style.wrapper, $style.flex, $style.horizontal]"
-      >
-        <label :class="[$style.wrapper, $style.flex, $style.vertical]">
           <span>Timer Behavior on Connect</span>
           <span>Timer behavior when Bluetooth device connect</span>
         </label>
@@ -330,30 +321,39 @@ const resetPreferenceHandler = () => {
           </label>
           <input type="checkbox" v-model="preferences.overrideZone1" />
         </div>
-        <div
+      </template>
+      <div
+        :class="[$style.field, $style.wrapper, $style.flex, $style.horizontal]"
+      >
+        <label :class="[$style.wrapper, $style.flex, $style.vertical]">
+          <span>Show All Bluetooth Devices (even if unsupported)</span>
+          <i>*Notice: Change this may cause unexpected behavior</i>
+        </label>
+        <input type="checkbox" v-model="preferences.showAllDevices" />
+      </div>
+      <div
+        :class="[$style.field, $style.wrapper, $style.flex, $style.horizontal]"
+      >
+        <label :class="[$style.wrapper, $style.flex, $style.vertical]">
+          <span>Reset Preferences</span>
+          <span>
+            <i>*Notice: This action cannot be undo</i><br />
+            Reset all preferences to default values then reload.
+          </span>
+        </label>
+        <button
+          @click="resetPreferenceHandler"
           :class="[
-            $style.field,
             $style.wrapper,
             $style.flex,
             $style.horizontal,
+            $style.danger,
           ]"
         >
-          <label :class="[$style.wrapper, $style.flex, $style.vertical]">
-            <span>Reset Preferences</span>
-            <span>
-              <i>*Notice: This action cannot be undo.</i><br />
-              Reset all preferences to default values then reload.
-            </span>
-          </label>
-          <button
-            @click="resetPreferenceHandler"
-            :class="[$style.wrapper, $style.flex, $style.horizontal, $style.danger]"
-          >
-            <Icon icon="fa6-solid:rotate" />
-            <span>Reset</span>
-          </button>
-        </div>
-      </template>
+          <Icon icon="fa6-solid:rotate" />
+          <span>Reset</span>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -437,10 +437,15 @@ const resetPreferenceHandler = () => {
 
         color: var(--color-gray-500);
         font-size: 1em;
-        
+
         :last-child:not(:only-child) {
           color: var(--color-gray-600);
           font-size: 80%;
+        }
+
+        > i,
+        > span > i {
+          color: var(--color-orange-500) !important;
         }
       }
 
