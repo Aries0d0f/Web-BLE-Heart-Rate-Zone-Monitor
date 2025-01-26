@@ -188,6 +188,7 @@ onMounted(() => {
             min="1"
             max="200"
             required
+            autocomplete="off"
           />
         </div>
         <div
@@ -261,6 +262,7 @@ onMounted(() => {
             inputmode="numeric"
             min="60"
             max="290"
+            autocomplete="off"
           />
         </div>
         <template v-if="preferences.formula !== HeartRateFormula.MHR">
@@ -282,6 +284,7 @@ onMounted(() => {
               inputmode="numeric"
               min="60"
               max="150"
+              autocomplete="off"
             />
           </div>
         </template>
@@ -304,6 +307,7 @@ onMounted(() => {
               inputmode="numeric"
               min="60"
               max="290"
+              autocomplete="off"
             />
           </div>
         </template>
