@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, watch } from "vue";
 import { Icon } from "@iconify/vue";
 import { refDebounced, useStorage } from "@vueuse/core";
 import { TimerState, useTimer } from "@/shared/timer";
@@ -136,17 +136,31 @@ const setupUpdateSchedule = () => {
       }
     });
   });
-}
+};
+
+watch(
+  () => activeZone.value?.id,
+  (id, preId) => {
+    console.log("activeZone", id, preId);
+    if (id !== preId) {
+      setupUpdateSchedule();
+    }
+  },
+  {
+    immediate: true
+  }
+);
 
 onMounted(() => {
   setupHooks();
-  setupUpdateSchedule();
 });
 </script>
 
 <template>
   <template v-if="preferences.enableHeartRateZone">
-    <template v-if="props.heartRate && activeZone && isGlobalTimerInitialized()">
+    <template
+      v-if="props.heartRate && activeZone && isGlobalTimerInitialized()"
+    >
       <h3 :class="$style[activeZone.id]">
         <template v-if="activeZone.timer.clock.value.hours !== '00'">
           {{ activeZone.timer.clock.value.formatted }}
@@ -175,7 +189,10 @@ onMounted(() => {
             $style.flex,
             $style.horizontal,
             $style[zone.id],
-            { [$style.active]: props.heartRate && zone.active && isGlobalTimerInitialized() },
+            {
+              [$style.active]:
+                props.heartRate && zone.active && isGlobalTimerInitialized(),
+            },
           ]"
         >
           <Icon :class="$style.icon" icon="fa6-solid:heart" />
