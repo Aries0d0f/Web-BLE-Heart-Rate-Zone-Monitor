@@ -189,6 +189,9 @@ onMounted(() => {
       <h3>--:--</h3>
     </template>
     <div
+      @click.capture.passive="() => {
+        preferences.enableChart = !preferences.enableChart;
+      }"
       :class="[
         $style['zone-container'],
         $style.wrapper,

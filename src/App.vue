@@ -110,31 +110,6 @@ onForget(() => {
           <p>{{ device?.name }}</p>
         </template>
       </div>
-      <button
-        :class="[
-          $style.badge,
-          $style.wrapper,
-          $style.flex,
-          $style.horizontal,
-          {
-            [$style.active]: timer.state.value !== TimerState.INITIAL,
-          },
-        ]"
-      >
-        <Icon
-          @click="
-            () => {
-              preferences.enableChart = !preferences.enableChart;
-            }
-          "
-          :class="$style.icon"
-          :icon="
-            preferences.enableChart
-              ? 'fa6-solid:chart-simple'
-              : 'fa6-solid:ellipsis'
-          "
-        />
-      </button>
     </div>
     <main
       :class="[
