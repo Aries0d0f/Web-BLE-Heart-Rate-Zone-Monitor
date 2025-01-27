@@ -89,6 +89,9 @@ onForget(() => {
         $style.wrapper,
         $style.flex,
         $style.horizontal,
+        {
+          [$style.chart]: preferences.enableChart && timer.state.value !== TimerState.INITIAL,
+        }
       ]"
     >
       <div
@@ -329,11 +332,17 @@ onForget(() => {
     place-content: center;
     place-items: center;
     margin: 1em;
-    margin-bottom: -0.5em;
+    margin-bottom: -1.5em;
+    will-change: margin;
+    transition: margin-top 0.1s linear 0s, margin-bottom 0.1s ease-in 0.11s;
+    
+    &.chart {
+      transition: margin-top 0.1s linear 0.1s, margin-bottom 0.1s ease-out 0s;
 
-    @media screen and (min-height: 720px) {
-      margin-top: clamp(2em, calc(100cqh - 6em - 22.5em), 4em);
-      margin-bottom: 0;
+      @media screen and (min-height: 720px) {
+        margin-top: clamp(2em, calc(100cqh - 6em - 22.5em), 4em);
+        margin-bottom: 0;
+      }
     }
 
     > button {

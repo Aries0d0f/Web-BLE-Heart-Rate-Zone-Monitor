@@ -31,7 +31,7 @@ const features = [Features.HEART_RATE.Service];
       $style.flex,
       $style.horizontal,
       {
-        [$style.active]: timer.state.value !== TimerState.INITIAL,
+        [$style.chart]: preferences.enableChart && timer.state.value !== TimerState.INITIAL,
       },
     ]"
   >
@@ -125,7 +125,7 @@ const features = [Features.HEART_RATE.Service];
       height: 2em;
     }
 
-    &.active {
+    &.chart {
       margin-bottom: clamp(1em, calc(100cqh - 6em - 22.5em), 100cqh);
 
       @media screen and (max-height: 720px) {
