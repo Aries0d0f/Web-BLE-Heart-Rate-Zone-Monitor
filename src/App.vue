@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useStorage } from "@vueuse/core";
 import { Icon } from "@iconify/vue";
 
@@ -32,6 +32,12 @@ const preferences = useStorage<PreferenceType>(
 
 const meters = ref<Map<Feature, number>>(new Map());
 const timerHooks = ref<TimerHooks>();
+
+const buildVersion = computed(() => GIT_COMMIT_HASH);
+const appVersion = computed(
+  () => `v${__APP_VERSION__} (${buildVersion.value.slice(0, 7)})`
+);
+
 const timer = useTimer(timerHooks);
 const { device, status, onPair, onForget } = useBluetooth();
 
@@ -212,8 +218,19 @@ onForget(() => {
         rel="noopener"
         aria-label="View on GitHub"
       >
-        <Icon icon="fa-brands:github" />
+        <Icon :class="$style.icon" icon="fa-brands:github" />
       </a>
+      <p>
+        <a
+          :href="`https://github.com/Aries0d0f/Web-BLE-Heart-Rate-Zone-Monitor/tree/${buildVersion}`"
+          title="View on GitHub"
+          target="_blank"
+          rel="noopener"
+          aria-label="View on GitHub"
+        >
+          {{ appVersion }}
+        </a>
+      </p>
     </footer>
   </main>
   <div
@@ -267,7 +284,7 @@ onForget(() => {
     }
 
     footer {
-      --wrapper-gap: 0.125em;
+      --wrapper-gap: 0.5em;
 
       text-align: center;
       font-size: 0.75em;
@@ -275,6 +292,7 @@ onForget(() => {
 
       p {
         font-size: 0.5em;
+        margin: 0;
 
         &:hover {
           color: var(--color-gray-700);
@@ -288,6 +306,11 @@ onForget(() => {
 
         &:hover {
           color: var(--color-gray-500);
+        }
+
+        > .icon {
+          display: block;
+          margin: auto;
         }
       }
     }
