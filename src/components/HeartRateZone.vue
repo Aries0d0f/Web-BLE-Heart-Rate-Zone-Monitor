@@ -190,7 +190,9 @@ onMounted(() => {
     </template>
     <div
       @click.capture.passive="() => {
-        preferences.enableChart = !preferences.enableChart;
+        if (isGlobalTimerInitialized()) {
+          preferences.enableChart = !preferences.enableChart;
+        }
       }"
       :class="[
         $style['zone-container'],
