@@ -223,6 +223,7 @@ onForget(() => {
       <p>
         <a
           :href="`https://github.com/Aries0d0f/Web-BLE-Heart-Rate-Zone-Monitor/tree/${buildVersion}`"
+          :class="$style.clear"
           title="View on GitHub"
           target="_blank"
           rel="noopener"
@@ -303,6 +304,10 @@ onForget(() => {
         font-size: 1em;
         white-space: nowrap;
         color: var(--color-gray-700);
+
+        &:not(:hover) {
+          text-decoration: none;
+        }
 
         &:hover {
           color: var(--color-gray-500);
