@@ -37,7 +37,7 @@ export default defineConfig({
       google: {
         families: [
           {
-            name: "Roboto",
+            name: "Barlow",
             styles: "wght@400;700",
           },
         ],

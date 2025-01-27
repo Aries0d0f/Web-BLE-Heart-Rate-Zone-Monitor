@@ -111,6 +111,11 @@ onForget((device) => {
     place-content: center;
     place-items: center;
 
+    > span {
+      font-variant-numeric: tabular-nums;
+      font-variant-ligatures: none;
+    }
+
     &.inactive {
       color: var(--color-gray-700);
     }

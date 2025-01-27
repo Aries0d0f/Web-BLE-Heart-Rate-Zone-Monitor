@@ -146,8 +146,8 @@ const features = [Features.HEART_RATE.Service];
       color: var(--color-gray-300);
       line-height: 1;
       font-size: 1.5em;
-      // Optical alignment
-      margin-bottom: -0.0875em;
+      font-variant-numeric: tabular-nums;
+      font-variant-ligatures: none;
 
       &.timer-pause {
         color: var(--color-gray-500);

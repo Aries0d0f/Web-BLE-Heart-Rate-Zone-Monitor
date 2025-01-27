@@ -260,6 +260,8 @@ h3 {
   margin: 0;
   font-weight: bold;
   font-size: 1.2em;
+  font-variant-numeric: tabular-nums;
+  font-variant-ligatures: none;
 
   @each $style, $color in $style-sets {
     &.#{$style} {
@@ -335,8 +337,6 @@ h3 {
 
     > span {
       margin-right: 0.2em;
-      // Optical alignment
-      margin-bottom: -0.1em;
     }
   }
 

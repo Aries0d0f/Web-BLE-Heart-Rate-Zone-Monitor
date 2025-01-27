@@ -332,7 +332,7 @@ onForget(() => {
     place-content: center;
     place-items: center;
     margin: 1em;
-    margin-bottom: -1.5em;
+    margin-bottom: -1em;
     will-change: margin;
     transition: margin-top 0.1s linear 0s, margin-bottom 0.1s ease-in 0.11s;
     
@@ -390,8 +390,6 @@ onForget(() => {
         text-overflow: ellipsis;
         padding-right: 0.25em;
         margin: 0;
-        // Optical alignment
-        margin-bottom: -0.125em;
       }
     }
   }
