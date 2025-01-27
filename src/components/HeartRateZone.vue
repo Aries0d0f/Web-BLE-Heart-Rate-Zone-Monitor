@@ -266,7 +266,7 @@ h3 {
 .zone {
   &-container {
     --wrapper-gap: 0.2em;
-    --chart-view-height: clamp(2.5em, calc(100cqh - 25em), 6em);
+    --chart-view-height: clamp(2.5em, calc(100cqh - 25em), 4em);
     --compact-view-height: 1.2em;
 
     place-content: center;
@@ -275,9 +275,10 @@ h3 {
     width: var(--monitor-width);
     will-change: height;
     transition: height 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
-
+    transition-delay: 0.1s;
+    
     &.chart {
-
+      transition-delay: 0s;
       height: var(--chart-view-height);
 
       > .zone {

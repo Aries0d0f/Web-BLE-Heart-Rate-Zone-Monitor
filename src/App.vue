@@ -83,6 +83,59 @@ onForget(() => {
       $style.vertical,
     ]"
   >
+    <div
+      :class="[
+        $style['viewport-topbar'],
+        $style.wrapper,
+        $style.flex,
+        $style.horizontal,
+      ]"
+    >
+      <div
+        :class="[
+          $style.badge,
+          $style.wrapper,
+          $style.flex,
+          $style.horizontal,
+          {
+            [$style.active]: device,
+          },
+        ]"
+      >
+        <Icon
+          :class="$style.icon"
+          :icon="device ? 'fa6-brands:bluetooth-b' : 'mdi:bluetooth-off'"
+        />
+        <template v-if="device?.name">
+          <p>{{ device?.name }}</p>
+        </template>
+      </div>
+      <button
+        :class="[
+          $style.badge,
+          $style.wrapper,
+          $style.flex,
+          $style.horizontal,
+          {
+            [$style.active]: timer.state.value !== TimerState.INITIAL,
+          },
+        ]"
+      >
+        <Icon
+          @click="
+            () => {
+              preferences.enableChart = !preferences.enableChart;
+            }
+          "
+          :class="$style.icon"
+          :icon="
+            preferences.enableChart
+              ? 'fa6-solid:chart-simple'
+              : 'fa6-solid:ellipsis'
+          "
+        />
+      </button>
+    </div>
     <main
       :class="[
         $style['viewport-container'],
@@ -91,59 +144,6 @@ onForget(() => {
         $style.vertical,
       ]"
     >
-      <div
-        :class="[
-          $style['viewport-topbar'],
-          $style.wrapper,
-          $style.flex,
-          $style.horizontal,
-        ]"
-      >
-        <div
-          :class="[
-            $style.badge,
-            $style.wrapper,
-            $style.flex,
-            $style.horizontal,
-            {
-              [$style.active]: device,
-            },
-          ]"
-        >
-          <Icon
-            :class="$style.icon"
-            :icon="device ? 'fa6-brands:bluetooth-b' : 'mdi:bluetooth-off'"
-          />
-          <template v-if="device?.name">
-            <p>{{ device?.name }}</p>
-          </template>
-        </div>
-        <button
-          :class="[
-            $style.badge,
-            $style.wrapper,
-            $style.flex,
-            $style.horizontal,
-            {
-              [$style.active]: timer.state.value !== TimerState.INITIAL,
-            },
-          ]"
-        >
-          <Icon
-            @click="
-              () => {
-                preferences.enableChart = !preferences.enableChart;
-              }
-            "
-            :class="$style.icon"
-            :icon="
-              preferences.enableChart
-                ? 'fa6-solid:chart-simple'
-                : 'fa6-solid:ellipsis'
-            "
-          />
-        </button>
-      </div>
       <template v-if="status !== BluetoothStatus.NORMAL">
         <div
           :class="[
@@ -353,6 +353,13 @@ onForget(() => {
     width: var(--monitor-width);
     place-content: center;
     place-items: center;
+    margin: 1em;
+    margin-bottom: -0.5em;
+
+    @media screen and (min-height: 720px) {
+      margin-top: clamp(2em, calc(100cqh - 6em - 22.5em), 4em);
+      margin-bottom: 0;
+    }
 
     > button {
       cursor: pointer;
