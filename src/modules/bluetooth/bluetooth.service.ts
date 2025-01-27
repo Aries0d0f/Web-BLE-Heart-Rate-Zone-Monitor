@@ -59,7 +59,10 @@ const useBluetooth$ = (_ctx?: Context) => {
     hooks.forEach((hook) => {
       if (device.value) {
         hook(device.value)?.catch((exception) => {
-          if (exception instanceof Error && exception.message.includes("no longer")) {
+          if (
+            exception instanceof Error &&
+            exception.message.includes("no longer")
+          ) {
             forget();
           }
         });
@@ -102,7 +105,7 @@ const useBluetooth$ = (_ctx?: Context) => {
   };
 
   navigator.bluetooth?.getDevices?.().then((devices) => {
-    if (devices.length) {
+    if (devices.length && devices[0] && devices[0].gatt?.connected) {
       device.value = devices[0];
     }
   });
