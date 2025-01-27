@@ -28,7 +28,10 @@ onPair((device) => {
             "characteristicvaluechanged",
             () => {
               if (characteristic.value) {
-                props.meters.set(feature.value.ID, new Uint8Array(characteristic.value.buffer)[1])
+                props.meters.set(
+                  feature.value.ID,
+                  new Uint8Array(characteristic.value.buffer)[1]
+                );
               }
             },
             true
@@ -69,13 +72,25 @@ onForget((device) => {
       ]"
     >
       <span>{{ props.meters.get(feature.ID) ?? "--" }}</span>
-      <Icon :class="$style.icon" :icon="feature.Icon" />
+      <Icon
+        :class="[
+          $style.icon,
+          {
+            [$style[feature.Animation]]: props.meters.get(feature.ID),
+          },
+        ]"
+        :style="{
+          '--animation-rate': `${60 / (props.meters.get(feature.ID) || 60)}s`,
+        }"
+        :icon="feature.Icon"
+      />
     </h1>
   </div>
 </template>
 
 <style module scoped lang="scss">
 @use "@/assets/styles/modules/wrapper.module" as wrapper;
+@import "@/assets/styles/libs/animation";
 
 .card {
   --wrapper-gap: 1em;
@@ -103,6 +118,11 @@ onForget((device) => {
     > .icon {
       font-size: 0.4em;
       margin-bottom: 0.2em;
+
+      &.heartbeat {
+        transform-origin: center;
+        animation: heartbeat var(--animation-rate) infinite;
+      }
     }
   }
 

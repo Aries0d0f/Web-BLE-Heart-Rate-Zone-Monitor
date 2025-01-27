@@ -25,3 +25,33 @@
     transform: scale(1);
   }
 }
+
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+
+  10% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(1.13);
+  }
+
+  20% {
+    transform: scale(1);
+  }
+
+  16% {
+    transform: scale(1.13);
+  }
+
+  42% {
+    transform: scale(1.12);
+  }
+
+  70% {
+    transform: scale(1);
+  }
+}

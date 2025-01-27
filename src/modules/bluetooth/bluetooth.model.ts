@@ -5,6 +5,7 @@ export const Features = {
     Icon: "fa6-solid:heart-pulse",
     Service: "heart_rate",
     Characteristic: "heart_rate_measurement",
+    Animation: "heartbeat",
   },
 } as const;
 
