@@ -132,7 +132,7 @@ const setupZones = () => {
     .map((zone) => ({
       ...zone,
       get active() {
-        return HRdebounced.value >= zone.min && HRdebounced.value < zone.max;
+        return Boolean(HRdebounced.value && HRdebounced.value >= zone.min && HRdebounced.value < zone.max);
       },
     }));
 };
