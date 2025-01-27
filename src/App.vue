@@ -75,128 +75,137 @@ onForget(() => {
 </script>
 
 <template>
-  <main
+  <div
     :class="[
-      $style['viewport-container'],
+      $style['viewport-entry'],
       $style.wrapper,
       $style.flex,
       $style.vertical,
     ]"
   >
-    <div
+    <main
       :class="[
-        $style['viewport-topbar'],
+        $style['viewport-container'],
         $style.wrapper,
         $style.flex,
-        $style.horizontal,
+        $style.vertical,
       ]"
     >
       <div
         :class="[
-          $style.badge,
+          $style['viewport-topbar'],
           $style.wrapper,
           $style.flex,
           $style.horizontal,
-          {
-            [$style.active]: device,
-          },
         ]"
       >
-        <Icon
-          :class="$style.icon"
-          :icon="device ? 'fa6-brands:bluetooth-b' : 'mdi:bluetooth-off'"
-        />
-        <template v-if="device?.name">
-          <p>{{ device?.name }}</p>
-        </template>
+        <div
+          :class="[
+            $style.badge,
+            $style.wrapper,
+            $style.flex,
+            $style.horizontal,
+            {
+              [$style.active]: device,
+            },
+          ]"
+        >
+          <Icon
+            :class="$style.icon"
+            :icon="device ? 'fa6-brands:bluetooth-b' : 'mdi:bluetooth-off'"
+          />
+          <template v-if="device?.name">
+            <p>{{ device?.name }}</p>
+          </template>
+        </div>
+        <button
+          :class="[
+            $style.badge,
+            $style.wrapper,
+            $style.flex,
+            $style.horizontal,
+            {
+              [$style.active]: timer.state.value !== TimerState.INITIAL,
+            },
+          ]"
+        >
+          <Icon
+            @click="
+              () => {
+                preferences.enableChart = !preferences.enableChart;
+              }
+            "
+            :class="$style.icon"
+            :icon="
+              preferences.enableChart
+                ? 'fa6-solid:chart-simple'
+                : 'fa6-solid:ellipsis'
+            "
+          />
+        </button>
       </div>
-      <button
-        :class="[
-          $style.badge,
-          $style.wrapper,
-          $style.flex,
-          $style.horizontal,
-          {
-            [$style.active]: timer.state.value !== TimerState.INITIAL,
-          },
-        ]"
-      >
-        <Icon
-          @click="
-            () => {
-              preferences.enableChart = !preferences.enableChart;
-            }
-          "
-          :class="$style.icon"
-          :icon="
-            preferences.enableChart
-              ? 'fa6-solid:chart-simple'
-              : 'fa6-solid:ellipsis'
-          "
+      <template v-if="status !== BluetoothStatus.NORMAL">
+        <div
+          :class="[
+            $style['viewport-banner'],
+            $style.wrapper,
+            $style.flex,
+            $style.horizontal,
+            {
+              [$style.warn]: status === BluetoothStatus.UNAUTHORIZED,
+              [$style.error]:
+                status === BluetoothStatus.UNSUPPORTED ||
+                status === BluetoothStatus.DISABLED,
+            },
+          ]"
+        >
+          <template v-if="status === BluetoothStatus.UNKNOWN">
+            <Icon :class="$style.icon" icon="fa6-solid:gear" />
+            <p>Checking Bluetooth availability...</p>
+          </template>
+          <template v-else-if="status === BluetoothStatus.UNAUTHORIZED">
+            <Icon :class="$style.icon" icon="fa6-solid:triangle-exclamation" />
+            <p>Bluetooth permission is required for this app.</p>
+          </template>
+          <template v-else-if="status === BluetoothStatus.DISABLED">
+            <Icon :class="$style.icon" icon="fa6-solid:circle-xmark" />
+            <p>
+              No Bluetooth available on this platform. Check if it is disabled
+              on the system.
+            </p>
+          </template>
+          <template v-else>
+            <Icon :class="$style.icon" icon="fa6-solid:circle-xmark" />
+            <p>
+              Your browser does not support
+              <a
+                href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API"
+              >
+                Web Bluetooth API
+              </a>
+              which is necessary for this app.
+            </p>
+          </template>
+        </div>
+      </template>
+      <template v-else>
+        <HeartRateZone
+          :heart-rate="meters.get(Features.HEART_RATE.ID)"
+          @setup-hooks="setupTimerHooksHandler"
         />
-      </button>
-    </div>
-    <template v-if="status !== BluetoothStatus.NORMAL">
+      </template>
       <div
         :class="[
-          $style['viewport-banner'],
+          $style['viewport-wrapper'],
           $style.wrapper,
           $style.flex,
           $style.horizontal,
-          {
-            [$style.warn]: status === BluetoothStatus.UNAUTHORIZED,
-            [$style.error]:
-              status === BluetoothStatus.UNSUPPORTED ||
-              status === BluetoothStatus.DISABLED,
-          },
         ]"
       >
-        <template v-if="status === BluetoothStatus.UNKNOWN">
-          <Icon :class="$style.icon" icon="fa6-solid:gear" />
-          <p>Checking Bluetooth availability...</p>
-        </template>
-        <template v-else-if="status === BluetoothStatus.UNAUTHORIZED">
-          <Icon :class="$style.icon" icon="fa6-solid:triangle-exclamation" />
-          <p>Bluetooth permission is required for this app.</p>
-        </template>
-        <template v-else-if="status === BluetoothStatus.DISABLED">
-          <Icon :class="$style.icon" icon="fa6-solid:circle-xmark" />
-          <p>
-            No Bluetooth available on this platform. Check if it is disabled on
-            the system.
-          </p>
-        </template>
-        <template v-else>
-          <Icon :class="$style.icon" icon="fa6-solid:circle-xmark" />
-          <p>
-            Your browser does not support
-            <a
-              href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API"
-            >
-              Web Bluetooth API
-            </a>
-            which is necessary for this app.
-          </p>
-        </template>
+        <Monitor :meters feature="HEART_RATE" />
       </div>
-    </template>
-    <template v-else>
-      <HeartRateZone
-        :heart-rate="meters.get(Features.HEART_RATE.ID)"
-        @setup-hooks="setupTimerHooksHandler"
-      />
-    </template>
-    <div
-      :class="[
-        $style['viewport-wrapper'],
-        $style.wrapper,
-        $style.flex,
-        $style.horizontal,
-      ]"
-    >
-      <Monitor :meters feature="HEART_RATE" />
-    </div>
-    <Controller :timer :on-show-preference />
+      <Controller :timer :on-show-preference />
+    </main>
     <footer :class="[$style.wrapper, $style.flex, $style.vertical]">
       <p>
         This work is licensed under
@@ -233,7 +242,7 @@ onForget(() => {
         </a>
       </p>
     </footer>
-  </main>
+  </div>
   <div
     @click.self.passive="onShowPreference.set(false)"
     id="dialog-entry"
@@ -254,19 +263,19 @@ onForget(() => {
 @use "@/assets/styles/modules/wrapper.module" as wrapper;
 
 .viewport {
-  &-container {
-    --wrapper-gap: 1em;
+  &-entry {
+    --wrapper-gap: 0;
     --monitor-width: 10em;
 
     background-color: var(--color-black);
     min-height: 100%;
     width: 100%;
-    padding: 1em 0;
-    place-content: center;
     place-items: center;
     font-size: 32px;
     will-change: font-size;
     transition: font-size 0.5s ease-in-out;
+    overflow: hidden scroll;
+    container: viewport / size;
 
     @media screen and (max-width: 1680px) and (min-height: 1050px) {
       font-size: 32px;
@@ -287,6 +296,7 @@ onForget(() => {
     footer {
       --wrapper-gap: 0.5em;
 
+      padding: 1em 0;
       text-align: center;
       font-size: 0.75em;
       color: var(--color-gray-800);
@@ -319,6 +329,16 @@ onForget(() => {
         }
       }
     }
+  }
+
+  &-container {
+    --wrapper-gap: 1em;
+
+    height: fit-content;
+    width: fit-content;
+    min-height: 100cqh;
+    place-content: center;
+    place-items: center;
   }
 
   &-wrapper {
