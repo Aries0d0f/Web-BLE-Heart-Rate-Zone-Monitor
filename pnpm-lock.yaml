@@ -42,6 +42,9 @@ importers:
       vite:
         specifier: ^6.0.5
         version: 6.0.11(@types/node@22.10.10)(sass-embedded@1.83.4)(terser@5.37.0)
+      vite-plugin-git-commit-hash:
+        specifier: ^1.0.7
+        version: 1.0.7(vite@6.0.11(@types/node@22.10.10)(sass-embedded@1.83.4)(terser@5.37.0))
       vite-plugin-pwa:
         specifier: ^0.21.1
         version: 0.21.1(vite@6.0.11(@types/node@22.10.10)(sass-embedded@1.83.4)(terser@5.37.0))(workbox-build@7.3.0)(workbox-window@7.3.0)
@@ -2040,6 +2043,11 @@ packages:
 
   varint@6.0.0:
     resolution: {integrity: sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg==}
+
+  vite-plugin-git-commit-hash@1.0.7:
+    resolution: {integrity: sha512-/OgmrY2nL6PrIeR+aVbjC5JQJCfBc+Wrzr7wGjvRQ7DMh3e/XADhbbvkKZQmUaS+HO6oUDtsApuFYa5njNt31Q==}
+    peerDependencies:
+      vite: '>=3'
 
   vite-plugin-pwa@0.21.1:
     resolution: {integrity: sha512-rkTbKFbd232WdiRJ9R3u+hZmf5SfQljX1b45NF6oLA6DSktEKpYllgTo1l2lkiZWMWV78pABJtFjNXfBef3/3Q==}
@@ -4354,6 +4362,10 @@ snapshots:
       picocolors: 1.1.1
 
   varint@6.0.0: {}
+
+  vite-plugin-git-commit-hash@1.0.7(vite@6.0.11(@types/node@22.10.10)(sass-embedded@1.83.4)(terser@5.37.0)):
+    dependencies:
+      vite: 6.0.11(@types/node@22.10.10)(sass-embedded@1.83.4)(terser@5.37.0)
 
   vite-plugin-pwa@0.21.1(vite@6.0.11(@types/node@22.10.10)(sass-embedded@1.83.4)(terser@5.37.0))(workbox-build@7.3.0)(workbox-window@7.3.0):
     dependencies:

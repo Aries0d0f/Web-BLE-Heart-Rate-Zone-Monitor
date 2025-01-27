@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from "node:url";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import Unfonts from "unplugin-fonts/vite";
+import GitRevision from '@jinixx/vite-plugin-git-revision';
 
 import { VitePWA } from "vite-plugin-pwa";
 
@@ -10,6 +11,7 @@ import { VitePWA } from "vite-plugin-pwa";
 export default defineConfig({
   plugins: [
     vue(),
+    GitRevision({}),
     VitePWA({
       injectRegister: "script-defer",
       devOptions: {
