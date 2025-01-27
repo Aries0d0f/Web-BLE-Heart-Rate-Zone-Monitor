@@ -266,26 +266,29 @@ h3 {
 .zone {
   &-container {
     --wrapper-gap: 0.2em;
+    --chart-view-height: clamp(2.5em, calc(100cqh - 25em), 6em);
+    --compact-view-height: 1.2em;
 
     place-content: center;
     place-items: end;
-    height: 1.2em;
+    height: var(--compact-view-height);
     width: var(--monitor-width);
     will-change: height;
-    transition: height 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+    transition: height 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
 
     &.chart {
-      height: 3.2em;
+
+      height: var(--chart-view-height);
 
       > .zone {
-        height: calc((3em - 1.2em) * var(--value) + 1.2em);
+        height: calc((var(--chart-view-height) - var(--compact-view-height)) * var(--value) + var(--compact-view-height));
       }
     }
   }
 
   --wrapper-gap: 0.3em;
 
-  height: 1.2em;
+  height: var(--compact-view-height);
   width: 1.2em;
   border-radius: 0.6em;
   font-weight: bold;

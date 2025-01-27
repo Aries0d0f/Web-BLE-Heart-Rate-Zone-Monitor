@@ -30,6 +30,9 @@ const features = [Features.HEART_RATE.Service];
       $style.wrapper,
       $style.flex,
       $style.horizontal,
+      {
+        [$style.active]: timer.state.value !== TimerState.INITIAL,
+      },
     ]"
   >
     <template v-if="timer.state.value === TimerState.INITIAL">
@@ -115,6 +118,20 @@ const features = [Features.HEART_RATE.Service];
     place-items: center;
     place-content: center;
     height: 3em;
+    will-change: margin, height;
+    transition: margin 0.1s linear, height 0.1s linear;
+
+    @media screen and (max-height: 690px) and (max-width: 375px) {
+      height: 2em;
+    }
+
+    &.active {
+      margin-bottom: clamp(1em, calc(100cqh - 6em - 22.5em), 100cqh);
+
+      @media screen and (max-height: 720px) {
+        margin-bottom: 0;
+      }
+    }
 
     > h1 {
       margin: 0;
@@ -135,7 +152,7 @@ const features = [Features.HEART_RATE.Service];
       width: 1.7em;
       flex-shrink: 0;
       cursor: pointer;
-      
+
       &:hover {
         background-color: var(--color-gray-700);
 

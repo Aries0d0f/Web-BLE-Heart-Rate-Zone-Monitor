@@ -339,6 +339,8 @@ onForget(() => {
     min-height: 100cqh;
     place-content: center;
     place-items: center;
+    flex-shrink: 0;
+    padding: 1em 0;
   }
 
   &-wrapper {
