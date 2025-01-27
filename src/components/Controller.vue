@@ -31,7 +31,8 @@ const features = [Features.HEART_RATE.Service];
       $style.flex,
       $style.horizontal,
       {
-        [$style.chart]: preferences.enableChart && timer.state.value !== TimerState.INITIAL,
+        [$style.chart]:
+          preferences.enableChart && timer.state.value !== TimerState.INITIAL,
       },
     ]"
   >
@@ -63,7 +64,13 @@ const features = [Features.HEART_RATE.Service];
           <Icon :class="[$style.icon, $style.align]" icon="fa6-solid:play" />
         </button>
       </template>
-      <h1>{{ timer.clock.value.formatted }}</h1>
+      <h1
+        :class="{
+          [$style['timer-pause']]: timer.state.value === TimerState.PAUSED,
+        }"
+      >
+        {{ timer.clock.value.formatted }}
+      </h1>
       <button
         @click="props.timer.stop"
         :class="[$style.wrapper, $style.flex, $style.horizontal]"
@@ -109,6 +116,7 @@ const features = [Features.HEART_RATE.Service];
 
 <style module scoped lang="scss">
 @use "@/assets/styles/modules/wrapper.module" as wrapper;
+@import "@/assets/styles/libs/animation";
 
 .action {
   &-container {
@@ -138,6 +146,13 @@ const features = [Features.HEART_RATE.Service];
       color: var(--color-gray-300);
       line-height: 1;
       font-size: 1.5em;
+      // Optical alignment
+      margin-bottom: -0.0875em;
+
+      &.timer-pause {
+        color: var(--color-gray-500);
+        animation: flash 1s infinite;
+      }
     }
 
     > button {
