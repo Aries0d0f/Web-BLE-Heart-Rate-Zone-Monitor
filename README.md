@@ -23,7 +23,7 @@ Open the demo site in a supported browser, connect your Bluetooth device, and en
 - If you are an **iOS/iPadOS user**, it is recommended to use [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055) browser which is a Safari wrapper but with Web Bluetooth API support.
 
 ![](https://github.com/user-attachments/assets/1bebd59c-7b31-4108-a9b2-dbfdc6bf125b)
-*A real use case screenshot, run on iPadOS (using [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055)), accompanied with a Virtual Cycling platform called "Rouvy".*
+*A screenshot for the real use case example, run on iPadOS (using [Bluefy](https://apps.apple.com/us/app/bluefy-web-ble-browser/id1492822055)), accompanied with a Virtual Cycling platform called "Rouvy".*
 
 ## Develop
 - Clone repo
